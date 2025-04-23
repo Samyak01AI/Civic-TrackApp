@@ -1,19 +1,18 @@
 package com.example.civic_trackapplication
-import com.google.firebase.FirebaseApp
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.example.civic_trackapplication.R
 
-class MainActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        FirebaseApp.initializeApp(this)
+        setContentView(R.layout.activity_home)
 
-        // Optional: Set welcome text
+        val name = intent.getStringExtra("username") ?: "User"
         val welcomeText = findViewById<TextView>(R.id.welcomeText)
-        welcomeText.text = "Welcome to CivicTrack!"
+        welcomeText.text = "Hi, $name 👋"
     }
 }
