@@ -20,13 +20,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="40dp" />
-        <!--name field-->
+        <!--Name Field-->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/nameInputLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="Enter Username"
+            android:hint="Enter Name"
             app:boxStrokeColor="@color/dark_green"
             app:boxBackgroundColor="@android:color/white"
             app:boxCornerRadiusTopStart="12dp"
@@ -128,7 +128,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="---------------------------Sign up---------------------------"
+            android:text="--------------------------- Create Account ---------------------------"
             android:textColor="@color/dark_green"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
