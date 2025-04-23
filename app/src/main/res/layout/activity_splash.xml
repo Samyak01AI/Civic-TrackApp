@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/img_4" >
+
+    <!-- App Logo -->
+    <ImageView
+        android:id="@+id/splashLogo"
+        android:layout_width="159dp"
+        android:layout_height="130dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/img_8" />
+
+    <!-- App Name -->
+    <TextView
+        android:id="@+id/splashText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/splashLogo"
+        android:layout_centerHorizontal="true"
+        android:text="CivicTrack"
+        android:textColor="#0A1843"
+        android:textSize="34sp"
+        android:textStyle="bold" />
+
+</RelativeLayout>

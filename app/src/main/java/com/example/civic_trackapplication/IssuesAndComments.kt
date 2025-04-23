@@ -1,18 +1,23 @@
 package com.example.civic_trackapplication
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.firestore
 
-class IssuesandComments {
+class IssuesAndComments {
 
     fun createOrCommentOnIssue(
         issueId: String,
         title: String,
         description: String,
+        category: String = "General",
         status: String = "Open",
-        userComment: String
+        userComment: String,
+        submittedBy: String = Firebase.auth.currentUser?.uid ?: "anonymous"
     ) {
         val db = Firebase.firestore
         val issueRef = db.collection("Issues").document()
@@ -49,9 +54,11 @@ class IssuesandComments {
                 val newIssue = hashMapOf(
                     "title" to title,
                     "description" to description,
+                    "category" to category,
                     "upvotes" to 0L,
                     "status" to status,
-                    "comments" to listOf(comment)
+                    "comments" to listOf(comment),
+                    "submittedBy" to submittedBy
                 )
 
                 issueRef.set(newIssue).addOnSuccessListener {
@@ -64,5 +71,4 @@ class IssuesandComments {
             println("Failed to check issue existence: ${it.message}")
         }
     }
-
 }
