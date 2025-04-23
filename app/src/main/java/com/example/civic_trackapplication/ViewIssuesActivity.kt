@@ -17,7 +17,7 @@ class ViewIssuesActivity : AppCompatActivity() {
         val dummyIssues = listOf("Pothole", "Garbage", "Water Leakage")
 
         // Setup RecyclerView
-        val rvIssues = findViewById<RecyclerView>(R.id.rvIssues)
+        val rvIssues = findViewById<RecyclerView>(R.id.recyclerIssues)
         rvIssues.layoutManager = LinearLayoutManager(this)
         rvIssues.adapter = IssueAdapter(dummyIssues) // Create this adapter
     }

@@ -21,7 +21,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
 
         firebaseAuth = FirebaseAuth.getInstance()
 
-        binding.btnResetPassword.setOnClickListener {
+        binding.sendResetLinkBtn.setOnClickListener {
             val email = binding.emailInput.text.toString().trim()
 
             if (email.isEmpty()) {
@@ -49,7 +49,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
                 }
         }
 
-        binding.loginRedirect.setOnClickListener {
+        binding.backToLogin.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
