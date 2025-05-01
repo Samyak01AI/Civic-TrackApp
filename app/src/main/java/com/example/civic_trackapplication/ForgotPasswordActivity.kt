@@ -17,39 +17,26 @@ class ForgotPasswordActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityForgotPasswordBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         firebaseAuth = FirebaseAuth.getInstance()
 
-        binding.btnResetPassword.setOnClickListener {
+        binding.sendResetLinkBtn.setOnClickListener {
             val email = binding.emailInput.text.toString().trim()
-
             if (email.isEmpty()) {
-                Toast.makeText(this, "Please enter your email", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            firebaseAuth.sendPasswordResetEmail(email)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        Toast.makeText(
-                            this,
-                            "Reset instructions sent to your email",
-                            Toast.LENGTH_LONG
-                        ).show()
-                        startActivity(Intent(this, LoginActivity::class.java))
-                        finish()
-                    } else {
-                        Toast.makeText(
-                            this,
-                            "Failed to send reset email: ${task.exception?.message}",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                Toast.makeText(this, "Enter your email", Toast.LENGTH_SHORT).show()
+            } else {
+                firebaseAuth.sendPasswordResetEmail(email)
+                    .addOnSuccessListener {
+                        Toast.makeText(this, "Reset link sent to your email", Toast.LENGTH_LONG).show()
                     }
-                }
+                    .addOnFailureListener {
+                        Toast.makeText(this, "Failed: ${it.localizedMessage}", Toast.LENGTH_LONG).show()
+                    }
+            }
         }
 
-        binding.loginRedirect.setOnClickListener {
+        binding.backToLogin.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
-            finish()
         }
     }
 }

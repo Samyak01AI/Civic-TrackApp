@@ -1,0 +1,60 @@
+<!-- Filename: activity_profile.xml -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:padding="24dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Profile Info"
+            android:textColor="#5D5FEF"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginTop="30dp" />
+
+        <ImageView
+            android:id="@+id/imgProfile"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/ic_account"
+            android:layout_marginTop="20dp"
+            android:scaleType="centerCrop"
+            android:background="@drawable/rounded_border" />
+        
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="User Name"
+            android:textSize="18sp"
+            android:textColor="#000000"
+            android:layout_marginTop="16dp" />
+
+        <TextView
+            android:id="@+id/tvEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:textSize="16sp"
+            android:textColor="#9A9A9A"
+            android:layout_marginTop="8dp" />
+
+        <Button
+            android:id="@+id/btnEditProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit Info"
+            android:textColor="@android:color/white"
+            android:backgroundTint="#5D5FEF"
+            android:layout_marginTop="24dp" />
+
+    </LinearLayout>
+</ScrollView>

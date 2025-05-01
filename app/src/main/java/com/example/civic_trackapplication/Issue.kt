@@ -1,10 +1,21 @@
-package com.example.civictrack.models
+package com.example.civic_trackapplication
 
 data class Issue(
     val title: String = "",
-    val location: String = "",
-    val status: String = "",
+    val description: String = "",
     val category: String = "",
+    val status: String = "",
     val submittedBy: String = "",
-    val imageRes: Int
+    val imageUrl: String = "",
+    val timestamp: String = "",
+    val location: Any? = null,
+    val comments: Comment = Comment()
+) {
+    constructor() : this("", "", "", "", "", "", "", null, Comment())
+}
+
+data class Comment(
+    val text: String = "",
+    val time: String = "",
+    val userId: String = ""
 )

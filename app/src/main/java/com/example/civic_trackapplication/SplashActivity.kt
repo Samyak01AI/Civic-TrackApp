@@ -5,8 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
-import com.example.civic_trackapplication.R
-import com.example.civic_trackapplication.WelcomeActivity
+import com.google.firebase.auth.FirebaseAuth
 
 class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -14,9 +13,13 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
 
         Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(this, WelcomeActivity::class.java))
+            if (FirebaseAuth.getInstance().currentUser != null) {
+                // Already logged in
+                startActivity(Intent(this, HomeActivity::class.java))
+            } else {
+                startActivity(Intent(this, WelcomeActivity::class.java))
+            }
             finish()
         }, 2000)
-
     }
 }
