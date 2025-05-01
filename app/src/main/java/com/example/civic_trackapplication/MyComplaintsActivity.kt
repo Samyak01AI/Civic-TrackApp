@@ -13,12 +13,11 @@ class MyComplaintsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_complaints)
 
-        // Dummy data for testing
-        val dummyComplaints = listOf("Complaint 1", "Complaint 2", "Complaint 3")
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerComplaints)
+        recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // Setup RecyclerView
-        val rvComplaints = findViewById<RecyclerView>(R.id.rvComplaints)
-        rvComplaints.layoutManager = LinearLayoutManager(this)
-        rvComplaints.adapter = ComplaintAdapter(dummyComplaints) // Create this adapter
+        // Dummy data (replace with real data from Firebase or DB)
+        val complaints = listOf("Pothole on 5th Ave", "Garbage not collected", "Streetlight broken")
+        recyclerView.adapter = SimpleListAdapter(complaints)
     }
 }

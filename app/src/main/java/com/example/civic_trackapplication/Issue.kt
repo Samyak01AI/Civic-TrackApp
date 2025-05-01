@@ -10,31 +10,10 @@ import android.view.ViewGroup
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 
-class Issue : Fragment() {
-
-    companion object {
-        fun newInstance() = Issue()
-    }
-
-    private val viewModel: IssueViewModel by viewModels()
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        viewModel.filteredIssues.observe(viewLifecycleOwner) { issues ->
-            // Update your RecyclerView or UI with the filtered issues
-            /*issuesAdapter.submitList(issues)*/
-        }
-
-        // Trigger a fetch
-        viewModel.fetchIssuesByUser(Firebase.auth.currentUser?.uid ?: "anonymous")
-
-    }
-
-   /* override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return inflater.inflate(R.layout.fragment_issue, container, false)
-    }*/
-}
+data class Issue(
+    val title: String,
+    val location: String,
+    val status: String,
+    val category: String,
+    val imageRes: Int
+)

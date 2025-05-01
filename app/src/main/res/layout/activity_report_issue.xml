@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F7F9FB"
+    android:background="#FFFFFF"
     android:padding="24dp">
 
     <LinearLayout
@@ -16,20 +16,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Report an Issue"
+            android:layout_marginTop="30dp"
+
             android:textSize="22sp"
             android:textStyle="bold"
-            android:textColor="#2E7D32"
+            android:textColor="#5D5FEF"
             android:layout_marginBottom="16dp" />
 
         <!-- Image Capture or Upload -->
         <ImageView
             android:id="@+id/imagePreview"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:src="@drawable/upload"
-            android:background="@drawable/rounded_border"
-            android:scaleType="fitXY"
-            android:layout_marginBottom="12dp"/>
+            android:layout_width="142dp"
+            android:layout_height="113dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/bg_tile"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_camera" />
 
         <Button
             android:id="@+id/btnUploadImage"
@@ -37,7 +39,7 @@
             android:layout_height="wrap_content"
             android:text="Capture Image"
             android:textColor="@android:color/white"
-            android:backgroundTint="#388E3C"
+            android:backgroundTint="#5D5FEF"
             android:layout_marginBottom="20dp" />
 
         <!-- Description -->
@@ -61,39 +63,36 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+        <!-- Location Text -->
+        <TextView
+            android:layout_marginTop="9dp"
+            android:id="@+id/locationText"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:orientation="horizontal">
-            <!-- Location Text -->
-            <TextView
-                android:id="@+id/locationText"
-                android:layout_marginTop="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Select Location"
-                android:textColor="#444"
-                android:textSize="20sp"
-                android:layout_marginBottom="24dp" />
-            <ImageButton
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:id="@+id/locationButton"
-                android:scaleType="centerCrop"
-                android:layout_marginLeft="170dp"
-                android:backgroundTint="#F5F7F9"
-                android:src="@drawable/ic_map_toggle"/>
-        </LinearLayout>
+            android:text="  Click to get location---->"
+            android:layout_weight="1"
+            android:textColor="#9A9A9A"
+            android:layout_marginBottom="24dp" />
+    <ImageButton
+        android:id="@+id/locationButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/map1"
+        android:scaleType="centerCrop"
+        android:backgroundTintMode="screen"/>
+</LinearLayout>
+
         <!-- Submit -->
         <Button
             android:id="@+id/btnSubmit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:text="Submit"
             android:textColor="@android:color/white"
-            android:backgroundTint="#2E7D32" />
+            android:backgroundTint="#5D5FEF" />
     </LinearLayout>
 </ScrollView>

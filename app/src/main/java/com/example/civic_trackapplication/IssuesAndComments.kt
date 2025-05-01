@@ -10,6 +10,7 @@ import com.google.firebase.firestore.firestore
 
 class IssuesAndComments {
 
+
     fun createOrCommentOnIssue(
         issueId: String,
         title: String,

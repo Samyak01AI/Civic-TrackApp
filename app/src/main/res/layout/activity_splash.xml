@@ -4,6 +4,10 @@
     android:layout_height="match_parent"
     android:background="@drawable/img_4" >
 
+    <!-- App Logo -->
+
+    <!-- App Name -->
+
     <ImageView
         android:id="@+id/splashLogo"
         android:layout_width="180dp"

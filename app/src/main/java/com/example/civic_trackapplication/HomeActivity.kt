@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 
@@ -14,17 +15,12 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-       /* val welcomeText = findViewById<TextView>(R.id.welcomeText)
-        var name = intent.getStringExtra("user_name")
-        welcomeText.text = "Welcome, $name!"
 
-        if(name == null) {
             val user = FirebaseAuth.getInstance().currentUser
             if (user != null) {
-                name = user.displayName
-                welcomeText.text = "Welcome, $name!"
+                val name = user.displayName
+                Toast.makeText(this, "Welcome, $name!", Toast.LENGTH_SHORT).show()
             }
-        }*/
         val cardReportIssue = findViewById<LinearLayout>(R.id.cardReportIssue)
         cardReportIssue.setOnClickListener {
             // Handle report issue button click
@@ -49,7 +45,7 @@ class HomeActivity : AppCompatActivity() {
         val cardAccount = findViewById<LinearLayout>(R.id.cardAccount)
         cardAccount.setOnClickListener {
             // Handle my complaints button click
-            Intent(this, MyComplaintsActivity::class.java).also {
+            Intent(this, MyAccountActivity::class.java).also {
                 startActivity(it)
             }
         }
