@@ -9,11 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.GeoPoint
 
 data class Issue(
-    val title: String,
-    val location: String,
-    val status: String,
-    val category: String,
-    val imageRes: Int
+    var title: String = "",
+    var status: String = "",
+    var category: String = "",
+    var imageUrl: String = "",
+    var location: Map<String, String> = emptyMap()
 )

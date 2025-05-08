@@ -71,4 +71,7 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation ("de.hdodenhof:circleimageview:3.1.0")
     implementation ("com.facebook.shimmer:shimmer:0.5.0")
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
+    implementation("org.json:json:20220924")
+
 }

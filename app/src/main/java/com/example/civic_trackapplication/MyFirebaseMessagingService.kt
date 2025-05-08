@@ -1,35 +1,43 @@
 package com.example.civic_trackapplication
 
-import android.util.Log
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
-import com.google.firebase.firestore.firestore
+import android.R
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.os.Build
+import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.google.firebase.messaging.messaging
-import com.google.firebase.messaging.remoteMessage
+
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
-    override fun onMessageReceived(message: RemoteMessage) {
-        super.onMessageReceived(message)
-            message.notification?.let {
-                // Show custom notification if needed
-                Log.d("FCM", "Message: ${it.title} - ${it.body}")
-            }
+    override fun onMessageReceived(remoteMessage: RemoteMessage) {
+        super.onMessageReceived(remoteMessage)
+
+        val title = if (remoteMessage.getNotification() != null) remoteMessage.getNotification()!!
+            .getTitle() else "No Title"
+        val body = if (remoteMessage.getNotification() != null) remoteMessage.getNotification()!!
+            .getBody() else "No Body"
+
+        sendNotification(title, body)
     }
 
-    override fun onNewToken(token: String) {
-        super.onNewToken(token)
-        Firebase.messaging.token.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val token = task.result
-                val userId = Firebase.auth.currentUser?.uid
+    private fun sendNotification(title: String?, message: String?) {
+        val builder: NotificationCompat.Builder = NotificationCompat.Builder(this, "default")
+            .setSmallIcon(R.drawable.ic_notification_overlay)
+            .setContentTitle(title)
+            .setContentText(message)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
 
-                // Save token to Firestore
-                Firebase.firestore.collection("users").document(token ?: "unknown")
-                    .update("fcmToken", token)
-            }
+        val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                "default", "Default Channel",
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            manager.createNotificationChannel(channel)
         }
+
+        manager.notify(0, builder.build())
     }
-    
 }
+

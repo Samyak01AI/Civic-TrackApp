@@ -1,5 +1,15 @@
 <resources>
     <string name="app_name">Civic-Track Application</string>
     <string name="default_web_client_id">143405735571-kpliob62mp75kkgmk5b0h2hpu02c93ed.apps.googleusercontent.com</string>
+    <string-array name="issue_categories">
+        <item>Select Category</item>
+        <item>Pothole</item>
+        <item>Garbage</item>
+        <item>Street Light</item>
+        <item>Water Leakage</item>
+        <item>Noise Pollution</item>
+        <item>Illegal Construction</item>
+        <item>Other</item>
+    </string-array>
 
 </resources>

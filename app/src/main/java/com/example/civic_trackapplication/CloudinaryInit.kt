@@ -15,10 +15,10 @@ class CloudinaryInit : Application() {
         val config: HashMap<String, String> = hashMapOf(
             "cloud_name" to "dzjgag3if",
             "api_key" to "989317572874918",
-            "api_secret" to "abrpVoOpVLQBx7pxoNj2XDiqcdQ"
+            "api_secret" to "abrpVoOpVLQBx7pxoNj2XDiqcdQ",
+            "upload_preset" to "issuesimg"
         )
-
-        val cloudinary = MediaManager.init(this, config)
-
+        MediaManager.init(this, config)
     }
+
 }
