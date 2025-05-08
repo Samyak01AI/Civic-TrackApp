@@ -34,11 +34,7 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
-    buildFeatures{
-        viewBinding=true
-    }
 }
-
 
 dependencies {
 
@@ -48,15 +44,14 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.firebase.auth)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
     implementation(libs.firebase.firestore)
-    implementation(libs.play.services.location)
-    implementation(libs.firebase.storage)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    implementation ("com.google.android.gms:play-services-maps:18.2.0")
-    implementation ("com.google.android.gms:play-services-location:21.0.1")
-    implementation ("de.hdodenhof:circleimageview:3.1.0")
-    implementation ("com.facebook.shimmer:shimmer:0.5.0")
+    implementation("com.google.firebase:firebase-firestore-ktx:24.10.0")
+    implementation("com.google.firebase:firebase-auth-ktx:22.3.0")
 }
