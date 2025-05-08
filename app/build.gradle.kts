@@ -64,6 +64,7 @@ dependencies {
 
     implementation("com.google.firebase:firebase-firestore-ktx:24.10.0")
     implementation("com.google.firebase:firebase-auth-ktx:22.3.0")
+    implementation("com.facebook.android:facebook-android-sdk:16.3.0")
     implementation ("com.google.android.gms:play-services-maps:18.1.0")
     implementation ("com.google.android.gms:play-services-location:21.0.1")
     implementation("com.google.android.gms:play-services-auth:20.7.0")
