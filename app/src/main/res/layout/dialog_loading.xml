@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="280dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@drawable/bg_tile"
+    android:gravity="center_horizontal">
+
+    <ProgressBar
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        style="?android:attr/progressBarStyleLarge"
+        android:indeterminateTint="#5D5FEF"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Please wait..."
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="#5D5FEF"
+        android:layout_marginTop="16dp"/>
+</LinearLayout>

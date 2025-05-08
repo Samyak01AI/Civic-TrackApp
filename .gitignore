@@ -13,3 +13,5 @@
 .externalNativeBuild
 .cxx
 local.properties
+functions/serviceAccountKey.json
+functions/serviceAccountKey.json
