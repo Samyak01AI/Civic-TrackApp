@@ -1,4 +1,4 @@
-package com.example.civic_trackapplication
+package com.example.civictrackapplication
 
 data class Issue(
     val title: String = "",

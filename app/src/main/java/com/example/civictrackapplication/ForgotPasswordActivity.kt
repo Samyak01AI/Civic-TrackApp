@@ -1,11 +1,10 @@
-package com.example.civic_trackapplication
+package com.example.civictrackapplication
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.civic_trackapplication.databinding.ActivityForgotPasswordBinding
-import com.example.civic_trackapplication.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 
 class ForgotPasswordActivity : AppCompatActivity() {

@@ -1,4 +1,4 @@
-package com.example.civic_trackapplication
+package com.example.civictrackapplication
 
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -8,8 +8,6 @@ import android.widget.*
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.civic_trackapplication.R
-import com.example.civic_trackapplication.Issue
-import kotlin.random.Random
 
 class IssueAdapter(private var issues: List<Issue>) :
     RecyclerView.Adapter<IssueAdapter.IssueViewHolder>() {

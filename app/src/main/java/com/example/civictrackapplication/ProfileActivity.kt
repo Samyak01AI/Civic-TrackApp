@@ -1,5 +1,5 @@
 
-package com.example.civic_trackapplication
+package com.example.civictrackapplication
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.example.civic_trackapplication.R
 import java.io.File
 import java.io.FileOutputStream
 

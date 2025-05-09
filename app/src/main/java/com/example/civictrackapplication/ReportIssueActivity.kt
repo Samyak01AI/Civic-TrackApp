@@ -1,4 +1,4 @@
-package com.example.civic_trackapplication
+package com.example.civictrackapplication
 
 import android.Manifest
 import android.app.Activity
@@ -13,6 +13,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.civic_trackapplication.R
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.textfield.TextInputEditText

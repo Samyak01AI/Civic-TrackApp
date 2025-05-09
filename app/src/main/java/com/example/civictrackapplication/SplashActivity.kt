@@ -1,10 +1,11 @@
-package com.example.civic_trackapplication
+package com.example.civictrackapplication
 
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
+import com.example.civic_trackapplication.R
 import com.google.firebase.auth.FirebaseAuth
 
 class SplashActivity : AppCompatActivity() {

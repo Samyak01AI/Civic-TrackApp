@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Civic-Track Application</string>
+    <string name="facebook_app_id">1211727627299291</string>
+
 </resources>

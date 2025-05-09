@@ -1,4 +1,4 @@
-package com.example.civic_trackapplication
+package com.example.civictrackapplication
 
 import android.view.LayoutInflater
 import android.view.View

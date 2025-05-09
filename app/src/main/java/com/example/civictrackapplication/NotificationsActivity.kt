@@ -1,12 +1,12 @@
-package com.example.civic_trackapplication
+package com.example.civictrackapplication
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.civic_trackapplication.R
 
-class HelpSupportActivity : AppCompatActivity() {
+class NotificationsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_help_support)
+        setContentView(R.layout.activity_notifications)
     }
 }

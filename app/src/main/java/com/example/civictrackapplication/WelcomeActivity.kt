@@ -1,10 +1,11 @@
 
-package com.example.civic_trackapplication
+package com.example.civictrackapplication
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Button
+import com.example.civic_trackapplication.R
 
 class WelcomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

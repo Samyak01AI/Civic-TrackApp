@@ -117,7 +117,8 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:src="@drawable/ic_facebook"
-                android:layout_marginEnd="16dp" />
+                android:layout_marginEnd="16dp"
+                android:id="@+id/imgFacebook"/>
             <ImageView
                 android:layout_width="32dp"
                 android:layout_height="32dp"

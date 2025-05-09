@@ -1,14 +1,14 @@
 
-package com.example.civic_trackapplication
+package com.example.civictrackapplication
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.GridLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.civic_trackapplication.R
 
 class MyAccountActivity : AppCompatActivity() {
 

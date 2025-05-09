@@ -1,32 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/helpSupportLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-
     android:background="#FFFFFF">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:orientation="vertical"
+        android:layout_marginTop="8dp">
 
-        android:orientation="vertical">
+        <!-- Header -->
+        <TextView
+            android:id="@+id/tvHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Help &amp; Support"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:paddingBottom="8dp" />
 
+        <!-- FAQ Section -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Help and Support"
+            android:text="FAQs"
             android:textSize="22sp"
             android:textStyle="bold"
             android:textColor="#5D5FEF"
-            android:layout_marginBottom="12dp"/>
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="12dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerFaqs"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="📞 Contact us: support@civictrack.com\n\n📘 FAQ:\n- How to report?\n- How to check complaint status?\n- How to update profile?"
-            android:textColor="#9A9A9A"
-            android:textSize="16sp"/>
+            android:nestedScrollingEnabled="false" />
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#DDDDDD"
+            android:layout_marginVertical="16dp" />
+
+        <!-- Contact Support Button -->
+        <Button
+            android:id="@+id/btnContactSupport"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Contact Support"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Feedback Button -->
+        <Button
+            android:id="@+id/btnFeedback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Send Feedback" />
+
     </LinearLayout>
 </ScrollView>
