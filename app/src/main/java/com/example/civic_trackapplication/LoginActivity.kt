@@ -12,6 +12,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.civic_trackapplication.databinding.ActivityLoginBinding
+import com.facebook.CallbackManager
+import com.facebook.FacebookSdk
+import com.facebook.appevents.AppEventsLogger
+import com.facebook.login.LoginManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -24,11 +28,24 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var mGoogleSignInClient : GoogleSignInClient
+    private lateinit var callbackManager: CallbackManager
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         firebaseAuth = FirebaseAuth.getInstance()
+
+
+        if (!FacebookSdk.isInitialized()) {
+            FacebookSdk.setClientToken("ab992de730789fbf5f3997fa8553ed86")
+            FacebookSdk.sdkInitialize(applicationContext)
+            AppEventsLogger.activateApp(application)
+        }
+
+        callbackManager = CallbackManager.Factory.create()
+
+
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
@@ -89,7 +106,10 @@ class LoginActivity : AppCompatActivity() {
                     }
             }
         }
-
+        //Facebook Sign-In
+        binding.btnFacebook.setOnClickListener {
+            LoginManager.getInstance().logInWithReadPermissions(this, listOf("email", "public_profile"))
+        }
         binding.btnGoogle.setOnClickListener {
             val signInIntent = mGoogleSignInClient.signInIntent
             startActivityForResult(signInIntent, 9001)
@@ -115,6 +135,7 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this, "Google sign in failed", Toast.LENGTH_SHORT).show()
             }
         }
+        callbackManager.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun firebaseAuthWithGoogle(idToken: String?) {
