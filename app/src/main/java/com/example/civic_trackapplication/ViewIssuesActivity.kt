@@ -14,57 +14,57 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class ViewIssuesActivity : AppCompatActivity() {
 
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var issueAdapter: IssueAdapter
-    private val issueList = mutableListOf<Issue>()
+    private lateinit var recycler: RecyclerView
+    private lateinit var adapter: IssueAdapter
+    private lateinit var chipGroup: ChipGroup
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_issues)
 
-        recyclerView = findViewById(R.id.recyclerIssues)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        issueAdapter = IssueAdapter(mutableListOf())
-        recyclerView.adapter = issueAdapter
 
-        fetchIssuesLive()
+        recycler = findViewById(R.id.recyclerIssues)
+        chipGroup = findViewById(R.id.chipGroup)
 
-    }
+        recycler.layoutManager = LinearLayoutManager(this)
 
-  /*  private fun fetchIssuesFromFirestore() {
-        FirebaseFirestore.getInstance().collection("Issues")
-            .get()
-            .addOnSuccessListener { result ->
-                issueList.clear()
-                for (document in result) {
-                    val issue = document.toObject(Issue::class.java)
-                    issueList.add(issue)
-                }
-                adapter.notifyDataSetChanged()
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "Failed to load issues: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
-    }*/
+        val db = FirebaseFirestore.getInstance()
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
 
-    private fun fetchIssuesLive() {
-        FirebaseFirestore.getInstance()
-            .collection("Issues")
-            .addSnapshotListener { snapshot, error ->
-                if (error != null) {
-                    Log.e("Firestore", "Listen failed: ", error)
-                    return@addSnapshotListener
-                }
-
-                if (snapshot != null) {
-                    val issueList = mutableListOf<Issue>()
-                    for (doc in snapshot) {
-                        val issue = doc.toObject(Issue::class.java)
-                        issueList.add(issue)
+        if (userId != null) {
+            db.collection("Issues")
+                .whereEqualTo("submittedBy", userId)
+                .get()
+                .addOnSuccessListener { snapshot ->
+                    val issues = snapshot.documents.mapNotNull { doc ->
+                        try {
+                            doc.toObject(Issue::class.java)
+                        } catch (e: Exception) {
+                            Log.e("IssueParseError", "Error parsing issue", e)
+                            null
+                        }
                     }
-                    issueAdapter.updateData(issueList)
-                }
-            }
-    }
 
+                    adapter = IssueAdapter(issues)
+                    recycler.adapter = adapter
+
+
+                    chipGroup.setOnCheckedChangeListener { group, checkedId ->
+                        val chipText = findViewById<View>(checkedId)?.let { chip ->
+                            (chip as? Chip)?.text.toString()
+                        } ?: "All"
+                        adapter.filterByCategory(chipText)
+                    }
+
+                    // Show all issues by default
+                    adapter.filterByCategory("All")
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(this, "Failed to load issues: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Log.e("FirestoreError", "Failed to load issues", e)
+                }
+        } else {
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show()
+        }
+    }
 }
