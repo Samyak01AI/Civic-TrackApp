@@ -61,6 +61,7 @@ dependencies {
     implementation(libs.play.services.maps)
     implementation(libs.androidx.fragment)
     implementation(libs.androidx.navigation.fragment)
+    implementation(libs.firebase.functions)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -22,6 +22,7 @@ import com.example.civic_trackapplication.viewmodels.AuthViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlin.getValue
 
 class MainActivity : AppCompatActivity() {

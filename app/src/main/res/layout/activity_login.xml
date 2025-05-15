@@ -154,14 +154,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/orText">
 
-            <ImageButton
+            <com.facebook.login.widget.LoginButton
                 android:id="@+id/btnFacebook"
                 android:layout_width="34dp"
-                android:layout_height="34dp"
+                android:layout_height="40dp"
                 android:layout_marginEnd="16dp"
-                android:scaleType="centerCrop"
-                android:background="#DFDFED"
-                android:src="@drawable/ic_facebook" />
+                android:background="#DFDFED" />
 
             <ImageButton
                 android:id="@+id/btnGoogle"

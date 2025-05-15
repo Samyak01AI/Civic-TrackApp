@@ -3,30 +3,30 @@ package com.example.civic_trackapplication
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
-import android.view.View
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.civic_trackapplication.databinding.ActivityLoginBinding
 import com.example.civic_trackapplication.viewmodels.AuthViewModel
+import com.facebook.AccessToken
 import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
 import com.facebook.FacebookSdk
 import com.facebook.appevents.AppEventsLogger
 import com.facebook.login.LoginManager
+import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.android.material.textfield.TextInputEditText
+import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
@@ -41,7 +41,6 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         firebaseAuth = FirebaseAuth.getInstance()
-
         viewModel.checkAdminStatus()
 
         viewModel.isAdmin.observe(this) { isAdmin ->
@@ -87,12 +86,10 @@ class LoginActivity : AppCompatActivity() {
 
             if (email.isEmpty() || password.isEmpty() || name.isEmpty()) {
                 Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
-            }
-            else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                 Toast.makeText(this, "Please enter a valid email", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
-            }
-            else {
+            } else {
                 firebaseAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
@@ -110,6 +107,42 @@ class LoginActivity : AppCompatActivity() {
                                     apply()
                                 }
                             }
+                            val user = FirebaseAuth.getInstance().currentUser
+
+                            user?.let {
+                                val uid = user.uid
+                                val name = user.displayName ?: "No Name"
+                                val email = user.email ?: "No Email"
+                                val photoUrl = user.photoUrl?.toString() ?: ""
+
+                                val userData = hashMapOf(
+                                    "uid" to uid,
+                                    "name" to name,
+                                    "email" to email,
+                                    "photoUrl" to photoUrl,
+                                    "joinDate" to System.currentTimeMillis() // optional
+                                )
+
+                                val db = FirebaseFirestore.getInstance()
+                                db.collection("users").document(uid).set(userData)
+                                    .addOnSuccessListener {
+                                        Log.d("Firestore", "User data saved")
+                                    }
+                                    .addOnFailureListener { e ->
+                                        Log.e("Firestore", "Failed to save user: ${e.message}")
+                                    }
+                                FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        val token = task.result
+                                        FirebaseFirestore.getInstance()
+                                            .collection("users")
+                                            .document(uid)
+                                            .update("fcmToken", token)
+                                    }
+                                }
+
+                            }
+
                             val viewModel: AuthViewModel by viewModels()
 
                             viewModel.checkAdminStatus()
@@ -119,8 +152,7 @@ class LoginActivity : AppCompatActivity() {
                                     val intent = Intent(this, AdminActivity::class.java)
                                     startActivity(intent)
                                     finish()
-                                }
-                                else{
+                                } else {
                                     startActivity(Intent(this, MainActivity::class.java))
                                     finish()
                                 }
@@ -136,9 +168,26 @@ class LoginActivity : AppCompatActivity() {
 
         }
         //Facebook Sign-In
-        binding.btnFacebook.setOnClickListener {
-            LoginManager.getInstance().logInWithReadPermissions(this, listOf("email", "public_profile"))
-        }
+        binding.btnFacebook.setPermissions("email", "public_profile")
+        binding.btnFacebook.registerCallback(
+            callbackManager,
+            object : FacebookCallback<LoginResult> {
+                override fun onSuccess(result: LoginResult) {
+                    handleFacebookAccessToken(result.accessToken)
+                }
+
+                override fun onCancel() {
+                    Toast.makeText(this@LoginActivity, "Login cancelled", Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onError(error: FacebookException) {
+                    Toast.makeText(
+                        this@LoginActivity,
+                        "Login error: ${error.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            })
         binding.btnGoogle.setOnClickListener {
             val signInIntent = mGoogleSignInClient.signInIntent
             startActivityForResult(signInIntent, 9001)
@@ -150,6 +199,7 @@ class LoginActivity : AppCompatActivity() {
         binding.forgotPassword.setOnClickListener {
             startActivity(Intent(this, ForgotPasswordActivity::class.java))
         }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -185,6 +235,41 @@ class LoginActivity : AppCompatActivity() {
                             putBoolean("isLoggedIn", true)
                             apply()
                         }
+                        val user = FirebaseAuth.getInstance().currentUser
+
+                        user?.let {
+                            val uid = user.uid
+                            val name = user.displayName ?: "No Name"
+                            val email = user.email ?: "No Email"
+                            val photoUrl = user.photoUrl?.toString() ?: ""
+
+                            val userData = hashMapOf(
+                                "uid" to uid,
+                                "name" to name,
+                                "email" to email,
+                                "photoUrl" to photoUrl,
+                                "joinDate" to System.currentTimeMillis() // optional
+                            )
+
+                            val db = FirebaseFirestore.getInstance()
+                            db.collection("users").document(uid).set(userData)
+                                .addOnSuccessListener {
+                                    Log.d("Firestore", "User data saved")
+                                }
+                                .addOnFailureListener { e ->
+                                    Log.e("Firestore", "Failed to save user: ${e.message}")
+                                }
+                            FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    val token = task.result
+                                    FirebaseFirestore.getInstance()
+                                        .collection("users")
+                                        .document(uid)
+                                        .update("fcmToken", token)
+                                }
+                            }
+                        }
+
                     }
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
@@ -193,5 +278,53 @@ class LoginActivity : AppCompatActivity() {
                     Toast.makeText(this, "Firebase sign-in failed.", Toast.LENGTH_SHORT).show()
                 }
             })
+    }
+    private fun handleFacebookAccessToken(token: AccessToken) {
+        val credential = FacebookAuthProvider.getCredential(token.token)
+        firebaseAuth.signInWithCredential(credential)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    val user = firebaseAuth.currentUser
+                    Toast.makeText(this, "Welcome ${user?.displayName}", Toast.LENGTH_SHORT).show()
+
+                    user?.let {
+                        val uid = user.uid
+                        val name = user.displayName ?: "No Name"
+                        val email = user.email ?: "No Email"
+                        val photoUrl = user.photoUrl?.toString() ?: ""
+
+                        val userData = hashMapOf(
+                            "uid" to uid,
+                            "name" to name,
+                            "email" to email,
+                            "photoUrl" to photoUrl,
+                            "joinDate" to System.currentTimeMillis() // optional
+                        )
+
+                        val db = FirebaseFirestore.getInstance()
+                        db.collection("users").document(uid).set(userData)
+                            .addOnSuccessListener {
+                                Log.d("Firestore", "User data saved")
+                            }
+                            .addOnFailureListener { e ->
+                                Log.e("Firestore", "Failed to save user: ${e.message}")
+                            }
+                        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                val token = task.result
+                                FirebaseFirestore.getInstance()
+                                    .collection("users")
+                                    .document(uid)
+                                    .update("fcmToken", token)
+                            }
+                        }
+                    }
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                } else {
+                    Toast.makeText(this, "Authentication failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
     }
 }

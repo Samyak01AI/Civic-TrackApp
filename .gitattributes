@@ -1,0 +1,15 @@
+# Standard settings
+* text=auto
+
+# Force CRLF for Windows files
+*.bat eol=crlf
+*.cmd eol=crlf
+
+# Binary files should not be modified
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
