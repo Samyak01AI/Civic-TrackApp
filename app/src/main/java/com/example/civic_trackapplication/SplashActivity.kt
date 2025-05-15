@@ -24,7 +24,7 @@ class SplashActivity : AppCompatActivity() {
             val isLoggedIn = pref.getBoolean("isLoggedIn", false)
 
             if (isLoggedIn) {
-                startActivity(Intent(this@SplashActivity, HomeActivity::class.java))
+                startActivity(Intent(this@SplashActivity, MainActivity::class.java))
                 finish()
             } else {
                 Handler(Looper.getMainLooper()).postDelayed({

@@ -50,6 +50,7 @@ import org.json.JSONObject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import androidx.core.net.toUri
+import com.example.civic_trackapplication.viewmodels.LocationViewModel
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -59,7 +60,7 @@ class ReportIssueActivity : AppCompatActivity() {
 
     private lateinit var viewModel: LocationViewModel
     companion object {
-        private const val REQUEST_CAMERA = 100
+        const val REQUEST_CAMERA = 100
     }
 
     var etDescription: EditText? = null

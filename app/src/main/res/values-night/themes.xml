@@ -4,6 +4,11 @@
         <item name="colorSurface">#000000</item>
         <item name="colorOnSurface">@color/colorPrimary</item>
         <item name="android:windowLightStatusBar">false</item>
+        <item name="bottomNavigationStyle">@style/Widget.CivicTrack.BottomNavigation</item>
+        <item name="buttonStyle">@style/Widget.CivicTrack.Button</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
     </style>
     <!-- res/values/themes.xml -->
     <style name="Theme.CivicTrackApplication.NoActionbar" parent="Theme.MaterialComponents.DayNight.NoActionBar"/>

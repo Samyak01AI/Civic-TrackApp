@@ -12,7 +12,7 @@
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_marginBottom="24dp"
-        android:scaleType="centerInside"
+        android:scaleType="centerCrop"
         android:src="@drawable/placeholder" />
 
     <!-- Title with government typography -->

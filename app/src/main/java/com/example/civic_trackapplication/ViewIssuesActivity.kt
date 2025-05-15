@@ -13,6 +13,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class ViewIssuesActivity : AppCompatActivity() {
+/*
 
     private lateinit var recycler: RecyclerView
     private lateinit var adapter: IssueAdapter
@@ -67,4 +68,5 @@ class ViewIssuesActivity : AppCompatActivity() {
             Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show()
         }
     }
+*/
 }

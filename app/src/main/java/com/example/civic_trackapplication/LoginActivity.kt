@@ -95,7 +95,7 @@ class LoginActivity : AppCompatActivity() {
                                     apply()
                                 }
                             }
-                            startActivity(Intent(this, HomeActivity::class.java))
+                            startActivity(Intent(this, MainActivity::class.java))
                             finish()
                         } else {
                             Toast.makeText(
@@ -157,7 +157,7 @@ class LoginActivity : AppCompatActivity() {
                             apply()
                         }
                     }
-                    val intent = Intent(this, HomeActivity::class.java)
+                    val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                     finish()
                 } else {

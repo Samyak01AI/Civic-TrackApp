@@ -6,7 +6,11 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.civic_trackapplication.HomeFragment"
-        android:label="Home" />
+        android:label="Home" >
+        <action
+            android:id="@+id/action_homeFragment_to_issueDetailFragment"
+            app:destination="@id/issueDetailFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/reportFragment"
@@ -16,7 +20,20 @@
     <fragment
         android:id="@+id/statusFragment"
         android:name="com.example.civic_trackapplication.StatusFragment"
-        android:label="Progress" />
+        android:label="Progress" >
+        <action
+        android:id="@+id/action_statusFragment_to_issueDetailFragment"
+        app:destination="@id/issueDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/issueDetailFragment"
+        android:name="com.example.civic_trackapplication.IssueDetailFragment"
+        android:label="Issue Details">
+        <argument
+            android:name="issueId"
+            app:argType="string" />
+    </fragment>
 
     <fragment
         android:id="@+id/profileFragment"

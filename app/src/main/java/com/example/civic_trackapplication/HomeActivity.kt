@@ -71,9 +71,9 @@ class HomeActivity : AppCompatActivity() {
         val cardMyComplaints = findViewById<LinearLayout>(R.id.cardMyComplaints)
         cardMyComplaints.setOnClickListener {
             // Handle my complaints button click
-            Intent(this, MyComplaintsActivity::class.java).also {
+           /* Intent(this, MyComplaintsActivity::class.java).also {
                 startActivity(it)
-            }
+            }*/
         }
         val cardAccount = findViewById<LinearLayout>(R.id.cardAccount)
         cardAccount.setOnClickListener {

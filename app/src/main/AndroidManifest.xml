@@ -22,7 +22,7 @@
         android:label="CivicTrack"
         android:theme="@style/Theme.CivicTrackApplication">
         <activity
-            android:name=".AdminActivity"
+            android:name=".IssueDetailActivity"
             android:exported="false" />
 
         <provider
@@ -48,11 +48,9 @@
         <activity
             android:name=".ForgotPasswordActivity"
             android:exported="false" />
-
         <activity
             android:name=".MainActivity"
             android:exported="false" />
-
         <activity
             android:name=".WelcomeActivity"
             android:exported="false" />
@@ -70,8 +68,7 @@
         <activity android:name=".HomeActivity" /> <!-- Core Features -->
         <activity android:name=".ViewIssuesActivity" />
         <activity android:name=".ReportIssueActivity" />
-        <activity android:name=".MyAccountActivity" /> <!-- Additional Screens -->
-        <activity android:name=".MyComplaintsActivity" />
+        <activity android:name=".MyAccountActivity" />
         <activity android:name=".MyReportsActivity" />
         <activity android:name=".NotificationsActivity" />
         <activity android:name=".HelpSupportActivity" />
