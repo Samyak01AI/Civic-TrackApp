@@ -49,5 +49,6 @@
     <string name="profile">Profile</string>
     <string name="home">Home</string>
     <string name="issue_image">Issue Image</string>
+    <string name="topic_of_issue">Topic of Issue</string>
 
 </resources>

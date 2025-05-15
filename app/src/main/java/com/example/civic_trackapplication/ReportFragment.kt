@@ -53,8 +53,6 @@ class ReportFragment : Fragment() {
     lateinit var imageUri: Uri
 
     private var selectedLocation: LatLng? = null
-    lateinit var location : String
-    lateinit var category : String
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var _binding: FragmentReportBinding? = null
     private val binding get() = _binding!!
@@ -78,16 +76,15 @@ class ReportFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         imageUri = "".toUri()
-        category = ""
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         locationViewModel = ViewModelProvider(requireActivity())[LocationViewModel::class.java]
         locationViewModel.selectedLocation.observe(viewLifecycleOwner) { latLng ->
             if (latLng != null) {
-                val lat = latLng.latitude
-                val lng = latLng.longitude
-                Log.d("ActivityLocation", "Lat: $lat, Lng: $lng")
-                binding.locationText.text = "Lat: $lat, Lng: $lng"
+                // Use the selected location
+                Log.d("ReportFragment", "Selected location: $latLng")
+                binding.locationText.text = "Latitude: ${latLng.latitude}, Longitude: ${latLng.longitude}"
                 selectedLocation = latLng
+                // e.g., assign it to a local variable or pass to submitIssue()
             }
         }
         setupClickListeners()
@@ -105,15 +102,6 @@ class ReportFragment : Fragment() {
             1001
             )
         } else {
-            fusedLocationClient.lastLocation
-                .addOnSuccessListener { loc: Location? ->
-                    if (loc != null) {
-                        location = "Lat: ${loc.latitude}, Lng: ${loc.longitude}"
-                        binding.locationText.text = location
-                    } else {
-                        binding.locationText.text = "Location not available"
-                    }
-                }
             showMapDialog()
         }
         }
@@ -133,27 +121,25 @@ class ReportFragment : Fragment() {
         }
         }
         binding.btnSubmit.setOnClickListener {
-            val desc = binding.etTitle.text.toString().trim()
+            val title = binding.etTitle.text.toString().trim()
+            val desc = binding.etDescription.text.toString().trim()
             val location = binding.locationText.text.toString()
-
-            binding.category.setOnClickListener {
-                val selectedChipId = binding.category.checkedChipId
-                if (selectedChipId != View.NO_ID) {
-                    val selectedChip = binding.category.findViewById<Chip>(selectedChipId)
-                    category = selectedChip.text.toString()
-                }
-
+            val category = binding.categories.checkedChipIds.mapNotNull { id ->
+                val chip = binding.categories.findViewById<Chip>(id)
+                chip?.text?.toString()
             }
 
-            if (desc.isEmpty() || category == "Select Category" || location.isEmpty() || imageUri.toString().equals("")) {
+            Log.d("ReportFragment", "Category: $category")
+
+            if (title.isEmpty() || desc.isEmpty() || category.isEmpty() || location.isEmpty() || imageUri.toString().equals("")) {
                 Log.d("ReportFragment", "Description: $desc, Category: $category, Location: $location, ImageUri: $imageUri")
                 Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_SHORT).show()
             } else {
                 viewModel.submitIssue(
-                    title = binding.etTitle.text.toString(),
-                    description = binding.etTitle.text.toString(),
-                    location = selectedLocation!!,
-                    imageUri = imageUri
+                    title,
+                    desc,
+                    selectedLocation!!,
+                    imageUri
                 )
             }
         }
@@ -205,7 +191,6 @@ class ReportFragment : Fragment() {
             binding.imagePreview.visibility = View.VISIBLE
             binding.imagePreview.setImageBitmap(bitmap)
         }
-
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

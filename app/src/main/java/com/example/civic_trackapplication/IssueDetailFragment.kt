@@ -51,7 +51,6 @@ class IssueDetailFragment : Fragment() {
     private fun updateUI(issue: Issue) {
         binding.apply {
             tvTitle.text = issue.title
-            tvDescription.text = issue.description
             tvStatus.text = issue.status
             tvLocation.text = "${issue.location.latitude}, ${issue.location.longitude}"
 

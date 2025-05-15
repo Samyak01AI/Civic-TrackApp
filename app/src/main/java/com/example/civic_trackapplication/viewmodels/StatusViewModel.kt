@@ -10,57 +10,53 @@ import com.google.firebase.firestore.Query
 
 class StatusViewModel : ViewModel() {
     private val firestore = FirebaseFirestore.getInstance()
-    private val issuesCollection = firestore.collection("issues")
-
+    private val _issuesForCharts = MutableLiveData<List<Issue>>()
+    val issuesForCharts: LiveData<List<Issue>> = _issuesForCharts
     private val _filteredIssues = MutableLiveData<List<Issue>>()
     val filteredIssues: LiveData<List<Issue>> = _filteredIssues
 
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean> = _isLoading
 
-    private var currentFilter: String? = null
-    private var currentSortField = "timestamp"
+    private val currentFilter = MutableLiveData(StatusFilter.ALL)
 
     init {
-        loadIssues()
+        currentFilter.observeForever { filter ->
+            loadIssues(filter)
+        }
     }
 
-    fun setStatusFilter(status: String?) {
-        currentFilter = status
-        loadIssues()
+    fun setFilter(filter: StatusFilter) {
+        currentFilter.value = filter
     }
 
-    fun setSortOrder(field: String) {
-        currentSortField = field
-        loadIssues()
+    fun refreshIssues() {
+        currentFilter.value?.let { loadIssues(it) }
     }
 
-    fun refreshData() {
-        loadIssues()
-    }
 
-    private fun loadIssues() {
+    private fun loadIssues(filter: StatusFilter) {
         _isLoading.value = true
 
-        var query = issuesCollection.orderBy(currentSortField, Query.Direction.DESCENDING)
+        var query = firestore.collection("Issues")
+            .orderBy("timestamp", Query.Direction.DESCENDING)
 
-        currentFilter?.let { status ->
-            query = query.whereEqualTo("status", status)
+        if (filter != StatusFilter.ALL) {
+            query = query.whereEqualTo("status", filter.name.lowercase())
         }
 
         query.addSnapshotListener { snapshot, error ->
             _isLoading.value = false
-
-            if (error != null) {
-                Log.e("StatusFragment", "Error loading issues", error)
-                return@addSnapshotListener
-            }
+            if (error != null) return@addSnapshotListener
 
             val issues = snapshot?.documents?.mapNotNull { doc ->
                 Issue.fromDocument(doc)
             } ?: emptyList()
 
             _filteredIssues.value = issues
+            _issuesForCharts.value = issues.takeLast(30) // Last 30 for charts
         }
     }
+
+    enum class StatusFilter { ALL, PENDING, IN_PROGRESS, RESOLVED }
 }

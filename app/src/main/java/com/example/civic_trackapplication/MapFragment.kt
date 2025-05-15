@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,35 +34,51 @@ class MapFragment : DialogFragment(), OnMapReadyCallback {
 
     private var googleMap: GoogleMap?= null
     private var currentMarker: Marker? = null
+    private var selectedLocation: LatLng? = null
+    private var marker: Marker? = null
+
+
 
 
     private val callback = OnMapReadyCallback { googleMap ->
 
 
-
-        googleMap.uiSettings.isZoomControlsEnabled=true
-        googleMap.uiSettings.isCompassEnabled=true
-        googleMap.uiSettings.isMapToolbarEnabled=true
-        googleMap.uiSettings.isRotateGesturesEnabled=true
-        googleMap.uiSettings.isScrollGesturesEnabled=true
-
+        googleMap.uiSettings.isZoomControlsEnabled = true
+        googleMap.uiSettings.isCompassEnabled = true
+        googleMap.uiSettings.isMapToolbarEnabled = true
+        googleMap.uiSettings.isRotateGesturesEnabled = true
+        googleMap.uiSettings.isScrollGesturesEnabled = true
 
 
-        googleMap.setOnInfoWindowClickListener(object :GoogleMap.OnInfoWindowClickListener{
+
+        googleMap.setOnInfoWindowClickListener(object : GoogleMap.OnInfoWindowClickListener {
             override fun onInfoWindowClick(p0: Marker) {
 
-                Toast.makeText(requireContext(),""+p0.tag.toString(),Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "" + p0.tag.toString(), Toast.LENGTH_SHORT).show()
             }
         })
         googleMap.setOnMapClickListener { latLng ->
-            currentMarker?.remove()
-            currentMarker = googleMap.addMarker(
-                MarkerOptions().position(latLng).title("Selected Location")
-            )
-            viewModel.setLocation(latLng)
+            selectedLocation = latLng
+
+            // Remove old marker if exists
+            marker?.remove()
+
+            // Add new marker
+            marker =
+                googleMap.addMarker(MarkerOptions().position(latLng).title("Selected Location"))
+
+            // Animate camera to marker
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+
+            // Save to shared ViewModel
+            viewModel.setSelectedLocation(latLng)
+
+            Log.d("MapFragment", "Marked Location: $latLng")
         }
     }
-    override fun onStart() {
+
+
+        override fun onStart() {
         super.onStart()
 
         dialog?.window?.setLayout(
@@ -106,6 +123,7 @@ class MapFragment : DialogFragment(), OnMapReadyCallback {
                 }
             }
         }
+
         val btnMapType = view?.findViewById<ImageButton>(R.id.btnMapType)
         val popupView = layoutInflater.inflate(R.layout.map_type_popup, null)
         val popupWindow = PopupWindow(

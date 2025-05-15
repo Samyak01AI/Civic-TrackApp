@@ -1,5 +1,6 @@
 package com.example.civic_trackapplication.adapter
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
@@ -11,49 +12,48 @@ import com.example.civic_trackapplication.databinding.ItemProfileIssueBinding
 
 class ProfileIssuesAdapter(
     private val onItemClick: (Issue) -> Unit
-) : ListAdapter<Issue, ProfileIssuesAdapter.ViewHolder>(DiffCallback()) {
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): ViewHolder {
-        TODO("Not yet implemented")
+) : ListAdapter<Issue, ProfileIssueViewHolder>(DiffCallback()) {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProfileIssueViewHolder {
+        val binding = ItemProfileIssueBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ProfileIssueViewHolder(binding, onItemClick)
     }
 
-    override fun onBindViewHolder(
-        holder: ViewHolder,
-        position: Int
-    ) {
-        TODO("Not yet implemented")
+    override fun onBindViewHolder(holder: ProfileIssueViewHolder, position: Int) {
+        holder.bind(getItem(position))
     }
+}
 
-    inner class ViewHolder(private val binding: ItemProfileIssueBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+class ProfileIssueViewHolder(
+    private val binding: ItemProfileIssueBinding,
+    private val onItemClick: (Issue) -> Unit
+) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(issue: Issue) {
-            binding.apply {
-                tvTitle.text = issue.title
-                tvStatus.text = issue.status.replaceFirstChar { it.uppercase() }
-                tvDate.text = issue.timestamp.toDate().toString()
+    fun bind(issue: Issue) {
+        binding.apply {
+            tvTitle.text = issue.title
+            tvStatus.text = issue.status.replaceFirstChar { it.uppercase() }
+            tvDate.text = issue.timestamp.toDate().toString()
 
-                // Status color coding
-                val colorRes = when (issue.status) {
-                    "resolved" -> R.color.status_resolved
-                    "in_progress" -> R.color.status_in_progress
-                    else -> R.color.status_pending
-                }
+            val colorRes = when (issue.status) {
+                "resolved" -> R.color.status_resolved
+                "in_progress" -> R.color.status_in_progress
+                else -> R.color.status_pending
+            }
 
-                tvStatus.setTextColor(ContextCompat.getColor(root.context, colorRes))
-               // ivStatus.setImageResource(iconRes)
+            tvStatus.setTextColor(ContextCompat.getColor(root.context, colorRes))
 
-                root.setOnClickListener { onItemClick(issue) }
+            root.setOnClickListener {
+                onItemClick(issue)
             }
         }
     }
+}
 
-    class DiffCallback : DiffUtil.ItemCallback<Issue>() {
-        override fun areItemsTheSame(oldItem: Issue, newItem: Issue) =
-            oldItem.id == newItem.id
-        override fun areContentsTheSame(oldItem: Issue, newItem: Issue) =
-            oldItem == newItem
-    }
+class DiffCallback : DiffUtil.ItemCallback<Issue>() {
+    override fun areItemsTheSame(oldItem: Issue, newItem: Issue) =
+        oldItem.id == newItem.id
+
+    override fun areContentsTheSame(oldItem: Issue, newItem: Issue) =
+        oldItem == newItem
 }

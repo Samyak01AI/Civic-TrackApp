@@ -32,15 +32,15 @@ class IssueAdapter(private var issues: List<Issue>) :
     override fun onBindViewHolder(holder: IssueViewHolder, position: Int) {
         val issue = issues[position]
         holder.title.text = issue.title
-        val latitude = issue.location["latitude"]
+     /*   val latitude = issue.location["latitude"]
         val longitude = issue.location["longitude"]
 
         holder.location.text = if (latitude != null && longitude != null) {
             "Lat: $latitude, Lng: $longitude"
         } else {
             "No location"
-        }
-        holder.status.text = issue.category
+        }*/
+        holder.status.text = issue.status
         holder.img.setImageResource(R.drawable.ic_report)
         val color = colors[position % colors.size].toColorInt()
         holder.card.setCardBackgroundColor(color)
@@ -50,10 +50,10 @@ class IssueAdapter(private var issues: List<Issue>) :
 
     override fun getItemCount(): Int = issues.size
 
-    fun filterByCategory(category: String) {
+/*    fun filterByCategory(category: String) {
         issues = if (category == "All") originalList else originalList.filter { it.category == category }
         notifyDataSetChanged()
-    }
+    }*/
 
     private var originalList: List<Issue> = issues
 

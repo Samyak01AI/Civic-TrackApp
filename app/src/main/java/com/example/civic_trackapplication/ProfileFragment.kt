@@ -4,8 +4,11 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,22 +16,40 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.cloudinary.android.MediaManager
+import com.cloudinary.android.callback.ErrorInfo
+import com.cloudinary.android.callback.UploadCallback
 import com.example.civic_trackapplication.adapter.ProfileIssuesAdapter
 import com.example.civic_trackapplication.databinding.FragmentProfileBinding
 import com.example.civic_trackapplication.viewmodels.ProfileViewModel
+import com.example.civic_trackapplication.viewmodels.ReportViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.File
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
+import androidx.core.net.toUri
+import androidx.lifecycle.lifecycleScope
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.FileOutputStream
 
 class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
     private val viewModel: ProfileViewModel by viewModels()
+    var imageUrl = ""
     private lateinit var issuesAdapter: ProfileIssuesAdapter
 
     override fun onCreateView(
@@ -46,7 +67,42 @@ class ProfileFragment : Fragment() {
         setupRecyclerView()
         setupClickListeners()
         observeData()
+
+        // Load profile image from Firestore or SharedPreferences on every view creation
+        loadProfileImage()
     }
+
+    private fun loadProfileImage() {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val db = FirebaseFirestore.getInstance()
+        val pref = requireContext().getSharedPreferences("user_pref", MODE_PRIVATE)
+
+        // First try loading cached image URL from SharedPreferences
+        val cachedUrl = pref.getString("profile_image", null)
+        if (!cachedUrl.isNullOrEmpty()) {
+            Glide.with(this)
+                .load(cachedUrl)
+                .circleCrop()
+                .placeholder(R.drawable.ic_user_placeholder)
+                .into(binding.ivProfile)
+        }
+
+        // Then also fetch latest from Firestore to keep in sync
+        db.collection("users").document(uid).get()
+            .addOnSuccessListener { doc ->
+                val url = doc.getString("photoUrl")
+                if (!url.isNullOrEmpty() && url != cachedUrl) {
+                    pref.edit().putString("profile_image", url).apply() // update cache
+
+                    Glide.with(this)
+                        .load(url)
+                        .circleCrop()
+                        .placeholder(R.drawable.ic_user_placeholder)
+                        .into(binding.ivProfile)
+                }
+            }
+    }
+
 
     private fun setupRecyclerView() {
         issuesAdapter = ProfileIssuesAdapter { issue ->
@@ -61,8 +117,11 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
+        binding.ivProfile.setOnClickListener {
+            showImageOptionDialog()
+        }
         binding.btnEditProfile.setOnClickListener {
-
+            showEditDialog()
         }
 
         binding.switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
@@ -150,21 +209,22 @@ class ProfileFragment : Fragment() {
         builder.create().show()
     }
     private fun loadProfile() {
-        val pref = requireContext().getSharedPreferences("user_pref", MODE_PRIVATE)
-        binding.tvName.text = pref.getString("name", "No Name") ?: "No Name"
-        binding.tvEmail.text = pref.getString("email", "No Email") ?: "No Email"
-        val imageUriString = pref.getString("profile_image", null)
+        viewModel.userData.observe(viewLifecycleOwner) { userProfile ->
+            val pref = requireContext().getSharedPreferences("user_pref", MODE_PRIVATE)
+            binding.tvName.text = pref.getString("name", "No Name") ?: "No Name"
+            binding.tvEmail.text = pref.getString("email", "No Email") ?: "No Email"
+            binding.tvJoinDate.text = "Member since ${userProfile.joinDate}"
+            val cloudinaryUrl = userProfile.imageUrl
 
-
-        if (imageUriString != null) {
-            val imageFile = File(Uri.parse(imageUriString).path ?: "")
-            if (imageFile.exists()) {
-                binding.ivProfile.setImageURI(Uri.fromFile(imageFile))
+            if (!cloudinaryUrl.isNullOrEmpty()) {
+                Glide.with(this)
+                    .load(cloudinaryUrl)
+                    .circleCrop()
+                    .placeholder(R.drawable.ic_user_placeholder)
+                    .into(binding.ivProfile)
             } else {
-                binding.ivProfile.setImageResource(R.drawable.ic_profile) // fallback
+                binding.ivProfile.setImageResource(R.drawable.ic_profile)
             }
-        } else {
-            binding.ivProfile.setImageResource(R.drawable.ic_profile)
         }
     }
     private fun openImagePicker() {
@@ -178,10 +238,11 @@ class ProfileFragment : Fragment() {
         if (requestCode == REQUEST_IMAGE_PICK && resultCode == Activity.RESULT_OK) {
             data?.data?.let { uri ->
                val selectedImageUri = uri
-                binding.ivProfile.apply {
-                    visibility = View.VISIBLE
-                    setImageURI(uri)
-                }
+                Glide.with(this)
+                    .load(selectedImageUri)
+                    .circleCrop()
+                    .placeholder(R.drawable.ic_user_placeholder)
+                    .into(binding.ivProfile)
             }
         }
     }
@@ -199,9 +260,31 @@ class ProfileFragment : Fragment() {
             .create()
 
         val clickListener = { resId: Int ->
-            binding.ivProfile.setImageResource(resId)
-            val pref = requireContext().getSharedPreferences("user_pref", MODE_PRIVATE)
-            pref.edit().remove("profile_image").apply() // Remove URI if any
+            var currentImageIdentifier: String? = null
+
+            val newIdentifier = "drawable_$resId"
+
+            if (newIdentifier == currentImageIdentifier) {
+                dialog.dismiss()
+            }
+
+            Glide.with(this)
+                .load(resId)
+                .circleCrop()
+                .placeholder(R.drawable.ic_user_placeholder)
+                .into(binding.ivProfile)
+
+            val appContext = requireContext().applicationContext
+            CoroutineScope(Dispatchers.IO).launch {
+                val uploadedUrl = uploadImage(getUriFromDrawable(resId))
+                    imageUrl = uploadedUrl
+                    val pref = appContext.getSharedPreferences("user_pref", MODE_PRIVATE)
+                    pref.edit().putString("profile_image", imageUrl).apply()
+
+            }
+            FirebaseFirestore.getInstance().collection("users").document(FirebaseAuth.getInstance().currentUser?.uid ?: "")
+                .update("photoUrl", imageUrl)
+            loadProfile()
             dialog.dismiss()
         }
 
@@ -214,23 +297,68 @@ class ProfileFragment : Fragment() {
 
         dialog.show()
     }
+
+    suspend fun uploadImage(imageUri: Uri): String = suspendCoroutine { cont ->
+        MediaManager.get().upload(imageUri)
+            .option("resource_type", "image")
+            .callback(object : UploadCallback {
+                override fun onStart(requestId: String) {
+                    Log.d("Cloudinary", "Upload started")
+                }
+
+                override fun onProgress(requestId: String, bytes: Long, totalBytes: Long) {
+                    Log.d("Cloudinary", "Uploading: $bytes / $totalBytes")
+                }
+
+                override fun onSuccess(requestId: String, resultData: Map<*, *>) {
+                    val imageUrl = resultData["secure_url"] as String
+                    cont.resume(imageUrl)
+                }
+
+                override fun onError(requestId: String, error: ErrorInfo) {
+                    Log.e("Cloudinary", "Upload error: ${error.description}")
+
+                }
+
+                override fun onReschedule(requestId: String, error: ErrorInfo) {
+                    Log.e("Cloudinary", "Rescheduled: ${error.description}")
+                }
+            })
+            .dispatch()
+    }
+    fun getUriFromDrawable(resId: Int): Uri {
+        val drawable = ContextCompat.getDrawable(requireContext(), resId) ?: return Uri.EMPTY
+        val bitmap = (drawable as BitmapDrawable).bitmap
+        val file = File(requireContext().cacheDir, "profile_temp.jpg")
+        val outputStream = FileOutputStream(file)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+        outputStream.close()
+        return FileProvider.getUriForFile(requireContext(), "${requireContext().packageName}.provider", file)
+    }
+
+
+
     private fun observeData() {
         viewModel.userData.observe(viewLifecycleOwner) { user ->
             user?.let {
                 binding.tvName.text = it.name
                 binding.tvEmail.text = it.email
                 binding.tvJoinDate.text = "Member since ${it.joinDate}"
-                Glide.with(this)
-                    .load(it.photoUrl)
-                    .circleCrop()
-                    .placeholder(R.drawable.ic_user_placeholder)
-                    .into(binding.ivProfile)
+                val cloudinaryUrl = it.imageUrl
+                if (!cloudinaryUrl.isNullOrEmpty()) {
+                    Glide.with(this)
+                        .load(cloudinaryUrl)
+                        .circleCrop()
+                        .placeholder(R.drawable.ic_user_placeholder)
+                        .into(binding.ivProfile)
+                }
+                viewModel.fetchUserIssues()
             }
         }
 
         viewModel.userIssues.observe(viewLifecycleOwner) { issues ->
             issuesAdapter.submitList(issues)
-            binding.tvEmptyState.visibility = if (issues.isEmpty()) View.VISIBLE else View.GONE
+            viewModel.fetchUserIssues()
         }
 
         viewModel.isDarkMode.observe(viewLifecycleOwner) { isDark ->
@@ -240,12 +368,20 @@ class ProfileFragment : Fragment() {
 
 
     private fun showLogoutConfirmation() {
+        val pref = requireContext().getSharedPreferences("user_pref", MODE_PRIVATE)
+        pref.edit().apply {
+            putBoolean("isLoggedIn", false)
+            apply()
+        }
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Logout")
             .setMessage("Are you sure you want to logout?")
             .setPositiveButton("Logout") { _, _ ->
                 viewModel.logout()
-               // findNavController().navigate(R.id.action_profileFragment_to_loginActivity)
+                val intent = Intent(requireContext(), LoginActivity::class.java)
+                startActivity(intent)
+                requireActivity().finish() // Optional: finish current activity if logging out
+
             }
             .setNegativeButton("Cancel", null)
             .show()

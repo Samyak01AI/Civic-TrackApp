@@ -39,7 +39,7 @@ class ProfileViewModel : ViewModel() {
                         _userData.value = UserProfile(
                             name = it.getString("name") ?: "Anonymous",
                             email = auth.currentUser?.email ?: "",
-                            photoUrl = it.getString("profileImageUrl") ?: "",
+                            imageUrl = it.getString("imageUrl") ?: "",
                             joinDate = (it.get("joinDate") as? Timestamp)?.toDate() ?: Date()
                         )
                     }
@@ -61,6 +61,20 @@ class ProfileViewModel : ViewModel() {
         }
     }
 
+    fun fetchUserIssues() {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        FirebaseFirestore.getInstance().collection("Issues")
+            .whereEqualTo("userId", uid)
+            .addSnapshotListener { snapshot, e ->
+                if (e != null || snapshot == null) return@addSnapshotListener
+                val issues = snapshot.documents.mapNotNull {
+                    it.toObject(Issue::class.java)?.copy(id = it.id)
+                }
+                _userIssues.postValue(issues)
+            }
+    }
+
+
     fun setDarkModeEnabled(enabled: Boolean) {
         _isDarkMode.value = enabled
         AppCompatDelegate.setDefaultNightMode(
@@ -80,7 +94,7 @@ class ProfileViewModel : ViewModel() {
     data class UserProfile(
         val name: String,
         val email: String,
-        val photoUrl: String,
+        val imageUrl: String,
         val joinDate: Date
     )
 }

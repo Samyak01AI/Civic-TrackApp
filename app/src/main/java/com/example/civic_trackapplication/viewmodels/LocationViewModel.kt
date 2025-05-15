@@ -6,10 +6,10 @@ import androidx.lifecycle.ViewModel
 import com.google.android.gms.maps.model.LatLng
 
 class LocationViewModel : ViewModel() {
-    private val _selectedLocation = MutableLiveData<LatLng?>()
-    val selectedLocation: LiveData<LatLng?> get() = _selectedLocation
+    private val _selectedLocation = MutableLiveData<LatLng>()
+    val selectedLocation: LiveData<LatLng> = _selectedLocation
 
-    fun setLocation(latLng: LatLng) {
-        _selectedLocation.value = latLng
+    fun setSelectedLocation(location: LatLng) {
+        _selectedLocation.value = location
     }
 }

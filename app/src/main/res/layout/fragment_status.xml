@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipeRefresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            app:title="Issue Status"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"/>
-
+        <!-- Status Filter Chips -->
         <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroupFilter"
+            android:id="@+id/chipGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
@@ -23,6 +21,7 @@
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_all"
+                style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="All"
@@ -30,49 +29,69 @@
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_pending"
+                style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Pending"/>
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_in_progress"
+                style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="In Progress"/>
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_resolved"
+                style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Resolved"/>
         </com.google.android.material.chip.ChipGroup>
-
-        <Spinner
-            android:id="@+id/sortSpinner"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginBottom="8dp"
-            android:entries="@array/status_filter_options"/>
-    </com.google.android.material.appbar.AppBarLayout>
+            android:orientation="vertical"
+            android:padding="8dp">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefresh"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Status Distribution"
+                android:textSize="14sp"
+                android:textStyle="bold"/>
 
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pieChart"
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:layout_marginTop="4dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Daily Reports"
+                android:textSize="14sp"
+                android:textStyle="bold"/>
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/barChart"
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:layout_marginTop="4dp"/>
+        </LinearLayout>
+        <!-- Issues List -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvIssues"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:paddingTop="8dp"
-            android:paddingBottom="88dp"/>
+            android:padding="8dp"/>
 
         <include
             android:id="@+id/emptyState"
             layout="@layout/layout_empty_status"
             android:visibility="gone"/>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </LinearLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

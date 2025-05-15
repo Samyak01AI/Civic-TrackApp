@@ -64,7 +64,7 @@ class ReportViewModel : ViewModel() {
         }
     }
 
-    private suspend fun uploadImage(imageUri: Uri): String = suspendCoroutine { cont ->
+    suspend fun uploadImage(imageUri: Uri): String = suspendCoroutine { cont ->
         MediaManager.get().upload(imageUri)
             .option("resource_type", "image")
             .callback(object : UploadCallback {

@@ -4,14 +4,18 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.civic_trackapplication.databinding.ActivityLoginBinding
+import com.example.civic_trackapplication.viewmodels.AuthViewModel
 import com.facebook.CallbackManager
 import com.facebook.FacebookSdk
 import com.facebook.appevents.AppEventsLogger
@@ -29,6 +33,8 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var mGoogleSignInClient : GoogleSignInClient
     private lateinit var callbackManager: CallbackManager
+    private val viewModel: AuthViewModel by viewModels()
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +42,15 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
         firebaseAuth = FirebaseAuth.getInstance()
 
+        viewModel.checkAdminStatus()
+
+        viewModel.isAdmin.observe(this) { isAdmin ->
+            if (isAdmin) {
+                val intent = Intent(this, AdminActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }
 
         if (!FacebookSdk.isInitialized()) {
             FacebookSdk.setClientToken("ab992de730789fbf5f3997fa8553ed86")
@@ -95,8 +110,21 @@ class LoginActivity : AppCompatActivity() {
                                     apply()
                                 }
                             }
-                            startActivity(Intent(this, MainActivity::class.java))
-                            finish()
+                            val viewModel: AuthViewModel by viewModels()
+
+                            viewModel.checkAdminStatus()
+
+                            viewModel.isAdmin.observe(this) { isAdmin ->
+                                if (isAdmin) {
+                                    val intent = Intent(this, AdminActivity::class.java)
+                                    startActivity(intent)
+                                    finish()
+                                }
+                                else{
+                                    startActivity(Intent(this, MainActivity::class.java))
+                                    finish()
+                                }
+                            }
                         } else {
                             Toast.makeText(
                                 this, "Login failed: ${task.exception?.message}",
@@ -105,6 +133,7 @@ class LoginActivity : AppCompatActivity() {
                         }
                     }
             }
+
         }
         //Facebook Sign-In
         binding.btnFacebook.setOnClickListener {
