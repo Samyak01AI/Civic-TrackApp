@@ -1,7 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.CivicTrackApplication" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    <style name="Theme.CivicTrackApplication" parent="Theme.Material3.DayNight">
+        <item name="colorSurface">#000000</item>
+        <item name="colorOnSurface">@color/colorPrimary</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
+    <!-- res/values/themes.xml -->
+    <style name="Theme.CivicTrackApplication.NoActionbar" parent="Theme.MaterialComponents.DayNight.NoActionBar"/>
+
 </resources>

@@ -15,9 +15,10 @@
 
         <ImageView
             android:id="@+id/imgIssue"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="74dp"
+            android:layout_height="74dp"
             android:src="@drawable/ic_report"
+            android:layout_marginTop="5dp"
             android:scaleType="centerCrop" />
 
         <LinearLayout
@@ -31,7 +32,7 @@
                 android:id="@+id/tvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Garbage on road"
+                android:text="@string/garbage_on_road"
                 android:textColor="@android:color/black"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -40,7 +41,7 @@
                 android:id="@+id/tvLocation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Near Main Street"
+                android:text="@string/near_main_street"
                 android:textColor="#666"
                 android:textSize="14sp" />
 
@@ -48,12 +49,28 @@
                 android:id="@+id/tvStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Pending"
+                android:text="@string/pending"
                 android:textColor="@android:color/black"
                 android:textSize="12sp"
                 android:background="@drawable/bg_status_pending"
                 android:padding="4dp"
                 android:layout_marginTop="4dp" />
+            <TextView
+                android:id="@+id/tvPriority"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#E60C0C"
+                android:text="@string/high_priority"
+                android:textColor="@android:color/white" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:progress="70" />
+
         </LinearLayout>
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>

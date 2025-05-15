@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="stroke_thin">1dp</dimen>
+    <dimen name="elevation_low">2dp</dimen>
+
+</resources>

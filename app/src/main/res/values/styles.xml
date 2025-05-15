@@ -1,7 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="CircleImage" parent="">
+
+    <style name="CircleImage">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">100%</item>
+        <item name="cornerSize">50%</item>
     </style>
+    <style name="Button.Reinstate" parent="Widget.Material3.Button">
+        <item name="android:textColor">@color/m3_on_primary_container</item>
+        <item name="backgroundTint">@color/m3_primary_container</item>
+        <item name="iconTint">@color/m3_on_primary_container</item>
+    </style>
+
+    <style name="Button.Suspend" parent="Widget.Material3.Button">
+        <item name="android:textColor">@color/m3_on_error_container</item>
+        <item name="backgroundTint">@color/m3_error_container</item>
+        <item name="iconTint">@color/m3_on_error_container</item>
+    </style>
+
+    <style name="CircleImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+    <style name="TextAppearance.CivicTrack.SectionHeader" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textColor">@color/government_primary</item>
+        <item name="android:drawablePadding">8dp</item>
+    </style>
+    <!-- Base filter chip style -->
+    <style name="Widget.CivicTrack.Chip.Filter" parent="Widget.Material3.Chip.Filter">
+        <!-- Solid fill color when selected -->
+        <item name="chipBackgroundColor">@color/chip_bg</item>
+
+        <!-- Stroke/border color -->
+        <item name="chipStrokeColor">@color/chip_filter_stroke_color</item>
+        <item name="chipStrokeWidth">1dp</item>
+
+        <!-- Text styling -->
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
+
+
+        <!-- Shape appearance -->
+        <item name="shapeAppearance">@style/ShapeAppearance.CivicTrack.Chip</item>
+
+        <!-- Check mark customization (when selectable) -->
+        <item name="checkedIcon">@drawable/checked</item>
+        <item name="checkedIconTint">@color/government_white</item>
+    </style>
+
+    <!-- Chip shape (rounded corners) -->
+    <style name="ShapeAppearance.CivicTrack.Chip" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+
+
+    <style name="TextAppearance.CivicTrack.Title" parent="TextAppearance.Material3.HeadlineMedium">
+        <!-- Official government font -->
+        <item name="fontFamily">@font/roboto_medium</item>
+
+        <!-- Color that meets WCAG AA contrast standards -->
+        <item name="android:textColor">@color/government_text_primary</item>
+
+        <!-- Size hierarchy for government documents -->
+        <item name="android:textSize">20sp</item>
+
+        <!-- Letter spacing for better readability -->
+        <item name="android:letterSpacing">0.02</item>
+
+        <!-- All-caps styling for official documents (optional) -->
+        <item name="android:textAllCaps">false</item>
+
+        <!-- Shadow for better contrast on light backgrounds -->
+        <item name="android:shadowColor">@android:color/black</item>
+        <item name="android:shadowRadius">0.1</item>
+        <item name="android:shadowDx">0.5</item>
+        <item name="android:shadowDy">0.5</item>
+    </style>
+
 </resources>

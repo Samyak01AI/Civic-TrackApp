@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fillViewport="true"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="16dp">
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/report_an_issue"
+            android:layout_marginTop="30dp"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/government_secondary"
+            android:layout_marginBottom="16dp" />
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/issue_description">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:singleSelection="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipPothole"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pothole"
+                style="@style/Widget.Material3.Chip.Filter" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipGarbage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/garbage"
+                style="@style/Widget.Material3.Chip.Filter" />
+        </com.google.android.material.chip.ChipGroup>
+
+        <ImageView
+            android:id="@+id/imagePreview"
+            android:layout_width="152dp"
+            android:layout_height="130dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/bg_tile"
+            android:scaleType="centerCrop"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/btnUploadImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/capture_image"
+            android:layout_marginTop="10dp"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/government_secondary" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+            <!-- Location Text -->
+            <TextView
+                android:layout_marginTop="9dp"
+                android:id="@+id/locationText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/click_to_get_location"
+                android:layout_weight="1"
+                android:textColor="#9A9A9A"
+                android:layout_marginBottom="24dp" />
+            <ImageButton
+                android:id="@+id/locationButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/map1"
+                android:scaleType="centerCrop"
+                android:backgroundTintMode="screen"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnSubmit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/submit"
+            android:layout_marginTop="25dp"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/government_secondary" />
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Status filter options -->
+    <string-array name="status_filter_options">
+        <item>All Issues</item>
+        <item>Pending</item>
+        <item>In Progress</item>
+        <item>Resolved</item>
+    </string-array>
+
+    <!-- Status values (must match Firestore) -->
+    <string-array name="issue_statuses">
+        <item>Pending</item>
+        <item>In Progress</item>
+        <item>Resolved</item>
+    </string-array>
+
+    <string-array name="issue_statuses_values" translatable="false">
+        <item>pending</item>
+        <item>in_progress</item>
+        <item>resolved</item>
+    </string-array>
+</resources>

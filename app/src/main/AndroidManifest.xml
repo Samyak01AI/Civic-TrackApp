@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" >
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -8,18 +8,23 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
-
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:name=".CloudinaryInit"
         android:label="CivicTrack"
-        android:theme="@style/Theme.CivicTrackApplication" >
+        android:theme="@style/Theme.CivicTrackApplication">
+        <activity
+            android:name=".AdminActivity"
+            android:exported="false" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -29,13 +34,13 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
         <meta-data
             android:name="com.facebook.sdk.ClientToken"
             android:value="ab992de730789fbf5f3997fa8553ed86" />
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAGYm0dEUM9LiAeQI_tNNoGG_KudZ3OXXw" />
@@ -43,30 +48,29 @@
         <activity
             android:name=".ForgotPasswordActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+
         <activity
             android:name=".WelcomeActivity"
             android:exported="false" />
         <activity
             android:name=".SplashActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".LoginActivity" />
         <activity android:name=".SignupActivity" />
-
-        <activity android:name=".HomeActivity" />
-
-        <!-- Core Features -->
+        <activity android:name=".HomeActivity" /> <!-- Core Features -->
         <activity android:name=".ViewIssuesActivity" />
         <activity android:name=".ReportIssueActivity" />
-        <activity android:name=".MyAccountActivity" />
-
-        <!-- Additional Screens -->
+        <activity android:name=".MyAccountActivity" /> <!-- Additional Screens -->
         <activity android:name=".MyComplaintsActivity" />
         <activity android:name=".MyReportsActivity" />
         <activity android:name=".NotificationsActivity" />

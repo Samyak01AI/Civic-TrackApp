@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/pieChart"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"/>
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="2">
+
+        <TextView android:text="Total Issues:"/>
+        <TextView android:id="@+id/tvTotalIssues"/>
+
+        <TextView android:text="Pending:"/>
+        <TextView android:id="@+id/tvPending"/>
+
+        <TextView android:text="In Progress:"/>
+        <TextView android:id="@+id/tvInProgress"/>
+
+        <TextView android:text="Resolved:"/>
+        <TextView android:id="@+id/tvResolved"/>
+    </GridLayout>
+</LinearLayout>

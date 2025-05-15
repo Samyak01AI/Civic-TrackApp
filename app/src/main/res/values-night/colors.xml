@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="government_primary">#E6822D</color> <!-- Darker saffron -->
+    <color name="government_secondary">#0A5C04</color> <!-- Darker green -->
+    <color name="government_blue">#E0E0FF</color> <!-- Light navy -->
+    <color name="status_pending">#FFA000</color>
+</resources>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.civic_trackapplication.HomeFragment"
+        android:label="Home" />
+
+    <fragment
+        android:id="@+id/reportFragment"
+        android:name="com.example.civic_trackapplication.ReportFragment"
+        android:label="Report" />
+
+    <fragment
+        android:id="@+id/statusFragment"
+        android:name="com.example.civic_trackapplication.StatusFragment"
+        android:label="Progress" />
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.civic_trackapplication.ProfileFragment"
+        android:label="Profile" />
+</navigation>
