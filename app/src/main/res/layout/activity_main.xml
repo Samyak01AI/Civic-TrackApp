@@ -1,58 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@color/background_primary">
 
-    <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    <!-- MAIN CONTENT -->
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/nav_host_fragment"
-            android:name="androidx.navigation.fragment.NavHostFragment"
+        <!-- Fragment container -->
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:navGraph="@navigation/nav_graph"
-            app:defaultNavHost="true" />
+            android:layout_marginBottom="@dimen/bottom_nav_height"
+            android:padding="4dp">
 
-            <!-- Bottom Navigation -->
-            <com.google.android.material.bottomnavigation.BottomNavigationView
-                android:id="@+id/bottom_navigation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:background="?android:attr/windowBackground"
-                android:paddingTop="0dp"
-                android:paddingBottom="0dp"
-                app:menu="@menu/bottom_nav_menu" />
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/nav_host_fragment"
+                android:name="androidx.navigation.fragment.NavHostFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:navGraph="@navigation/nav_graph"
+                app:defaultNavHost="true" />
+        </FrameLayout>
 
-            <ImageButton
+        <!-- Modern Bottom Navigation Bar -->
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/bottom_nav_background"
+            app:elevation="@dimen/elevation_large"
+            app:itemIconSize="@dimen/bottom_nav_icon_size"
+            app:itemIconTint="@drawable/bottom_nav_selector"
+            app:itemTextColor="@drawable/bottom_nav_selector"
+            app:labelVisibilityMode="labeled"
+            app:menu="@menu/bottom_nav_menu" />
+
+        <!-- Floating Action Button for Chatbot -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/chatbot"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
             android:layout_gravity="bottom|end"
-            android:layout_marginBottom="100dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/chatbot" />
-    </FrameLayout>
+            android:layout_marginEnd="@dimen/spacing_lg"
+            android:layout_marginBottom="80dp"
+            android:contentDescription="Open Chatbot"
+            android:src="@drawable/chatbot"
+            android:scaleType="centerCrop"
+            app:backgroundTint="#2562E9"
+            app:tint="@android:color/white"
+            app:elevation="@dimen/elevation_medium" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <!-- CHATBOT DRAWER -->
+    <!-- RIGHT DRAWER PANEL: Chatbot WebView -->
     <LinearLayout
         android:id="@+id/chat_panel"
-        android:layout_width="350dp"
+        android:layout_width="320dp"
         android:layout_height="match_parent"
         android:layout_gravity="end"
         android:orientation="vertical"
-        android:background="@android:color/white">
-
+        android:background="@android:color/white"
+        android:elevation="@dimen/elevation_extra_large">
         <WebView
             android:id="@+id/chat_webview"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </LinearLayout>
-    </androidx.drawerlayout.widget.DrawerLayout>
+</androidx.drawerlayout.widget.DrawerLayout>

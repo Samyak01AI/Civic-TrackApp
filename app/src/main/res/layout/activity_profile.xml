@@ -27,8 +27,7 @@
             android:layout_height="120dp"
             android:src="@drawable/ic_account"
             android:layout_marginTop="20dp"
-            android:scaleType="centerCrop"
-            app:shapeAppearanceOverlay="@style/CircleImage" />
+            android:scaleType="centerCrop" />
         
         <TextView
             android:id="@+id/tvName"

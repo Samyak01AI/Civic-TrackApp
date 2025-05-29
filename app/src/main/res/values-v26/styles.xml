@@ -7,4 +7,5 @@
         <item name="android:background">@drawable/bg_stats_badge</item>
         <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
     </style>
+
 </resources>

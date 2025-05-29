@@ -35,15 +35,15 @@ class StatusIssuesAdapter(
         fun bind(issue: Issue) {
             binding.apply {
                 tvTitle.text = issue.title
-                tvLocation.text = issue.location.toString()
-                tvDate.text = issue.timestamp.toDate().toString()
+                tvLocation.text = issue.location
+                tvDate.text = issue.timestamp.toString()
 
                 // Status chip
                 chipStatus.text = issue.status.replaceFirstChar { it.uppercase() }
                 chipStatus.setChipBackgroundColorResource(
                     when (issue.status) {
-                        "resolved" -> R.color.status_resolved
-                        "in_progress" -> R.color.status_in_progress
+                        "resolved" -> R.color.status_approved
+                        "in_progress" -> R.color.status_processing
                         else -> R.color.status_pending
                     }
                 )

@@ -29,7 +29,8 @@ class ReportViewModel : ViewModel() {
     fun submitIssue(
         title: String,
         description: String,
-        location: LatLng,
+        location: String,
+        category: String,
         imageUri: Uri?
     ) {
         _submissionStatus.value = SubmissionStatus.Loading
@@ -43,7 +44,8 @@ class ReportViewModel : ViewModel() {
                 val issue = hashMapOf(
                     "title" to title,
                     "description" to description,
-                    "location" to GeoPoint(location.latitude, location.longitude),
+                    "location" to location,
+                    "category" to category,
                     "status" to "pending",
                     "timestamp" to Timestamp.Companion.now(),
                     "imageUrl" to imageUrl,

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark theme specific style overrides -->
+
+    <!-- Card Styles for Dark Theme -->
+    <style name="Theme.CivicTrack.Card" parent="Widget.Material3.CardView.Filled">
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardElevation">6dp</item>
+        <item name="cardBackgroundColor">@color/card_background</item>
+        <item name="contentPadding">16dp</item>
+        <item name="android:layout_margin">8dp</item>
+        <item name="strokeColor">@color/card_border</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+
+    <!-- Text Input for Dark Theme -->
+    <style name="Theme.CivicTrack.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
+        <item name="boxStrokeColor">@color/primary_blue</item>
+        <item name="hintTextColor">@color/text_secondary</item>
+        <item name="android:textColorHint">@color/text_tertiary</item>
+        <item name="boxBackgroundColor">@color/surface_light_gray</item>
+    </style>
+
+    <!-- Dark Toolbar -->
+    <style name="Theme.CivicTrack.Toolbar" parent="Widget.Material3.Toolbar">
+        <item name="android:background">@color/surface_white</item>
+        <item name="titleTextColor">@color/text_primary</item>
+        <item name="subtitleTextColor">@color/text_secondary</item>
+        <item name="android:elevation">4dp</item>
+    </style>
+
+    <!-- Dark Tab Layout -->
+    <style name="Theme.CivicTrack.TabLayout" parent="Widget.Material3.TabLayout">
+        <item name="tabBackground">@color/surface_white</item>
+        <item name="tabSelectedTextColor">@color/primary_blue_light</item>
+        <item name="tabTextColor">@color/text_secondary</item>
+        <item name="tabIndicatorColor">@color/primary_blue_light</item>
+        <item name="tabIndicatorHeight">3dp</item>
+    </style>
+
+    <!-- Dark Bottom Navigation -->
+    <style name="Theme.CivicTrack.BottomNavigation" parent="Widget.Material3.BottomNavigationView">
+        <item name="android:background">@color/surface_white</item>
+        <item name="itemIconTint">@drawable/bottom_nav_selector</item>
+        <item name="itemTextColor">@drawable/bottom_nav_selector</item>
+        <item name="elevation">8dp</item>
+        <item name="itemRippleColor">@color/primary_blue_200</item>
+    </style>
+
+    <!-- Dark Chip Styles -->
+    <style name="Theme.CivicTrack.Chip" parent="Widget.Material3.Chip.Filter">
+        <item name="chipCornerRadius">20dp</item>
+        <item name="chipBackgroundColor">@color/surface_light_gray</item>
+        <item name="android:textColor">@color/primary_blue_light</item>
+        <item name="chipStrokeColor">@color/primary_blue</item>
+        <item name="chipStrokeWidth">1dp</item>
+    </style>
+
+    <!-- Progress Bar for Dark Theme -->
+    <style name="Theme.CivicTrack.ProgressBar" parent="Widget.Material3.LinearProgressIndicator">
+        <item name="trackColor">@color/neutral_700</item>
+        <item name="indicatorColor">@color/primary_blue_light</item>
+        <item name="trackCornerRadius">4dp</item>
+    </style>
+</resources>

@@ -1,81 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <style name="CircleImage">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">50%</item>
-    </style>
-    <style name="Button.Reinstate" parent="Widget.Material3.Button">
-        <item name="android:textColor">@color/m3_on_primary_container</item>
-        <item name="backgroundTint">@color/m3_primary_container</item>
-        <item name="iconTint">@color/m3_on_primary_container</item>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Action Bar Style -->
+    <style name="Theme.CivicTrack.ActionBar" parent="Widget.Material3.ActionBar.Solid">
+        <item name="background">@color/primary_blue</item>
+        <item name="titleTextStyle">@style/Theme.CivicTrack.ActionBar.Title</item>
+        <item name="elevation">4dp</item>
     </style>
 
-    <style name="Button.Suspend" parent="Widget.Material3.Button">
-        <item name="android:textColor">@color/m3_on_error_container</item>
-        <item name="backgroundTint">@color/m3_error_container</item>
-        <item name="iconTint">@color/m3_on_error_container</item>
-    </style>
-
-    <style name="CircleImageView" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">50%</item>
-    </style>
-    <style name="TextAppearance.CivicTrack.SectionHeader" parent="TextAppearance.Material3.TitleMedium">
-        <item name="android:textColor">@color/government_primary</item>
-        <item name="android:drawablePadding">8dp</item>
-    </style>
-    <!-- Base filter chip style -->
-    <style name="Widget.CivicTrack.Chip.Filter" parent="Widget.Material3.Chip.Filter">
-        <!-- Solid fill color when selected -->
-        <item name="chipBackgroundColor">@color/chip_bg</item>
-
-        <!-- Stroke/border color -->
-        <item name="chipStrokeColor">@color/chip_filter_stroke_color</item>
-        <item name="chipStrokeWidth">1dp</item>
-
-        <!-- Text styling -->
-        <item name="android:textColor">@color/colorPrimary</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:fontFamily">@font/roboto_medium</item>
-
-
-        <!-- Shape appearance -->
-        <item name="shapeAppearance">@style/ShapeAppearance.CivicTrack.Chip</item>
-
-        <!-- Check mark customization (when selectable) -->
-        <item name="checkedIcon">@drawable/checked</item>
-        <item name="checkedIconTint">@color/government_white</item>
-    </style>
-
-    <!-- Chip shape (rounded corners) -->
-    <style name="ShapeAppearance.CivicTrack.Chip" parent="ShapeAppearance.Material3.SmallComponent">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">8dp</item>
-    </style>
-
-
-    <style name="TextAppearance.CivicTrack.Title" parent="TextAppearance.Material3.HeadlineMedium">
-        <!-- Official government font -->
-        <item name="fontFamily">@font/roboto_medium</item>
-
-        <!-- Color that meets WCAG AA contrast standards -->
-        <item name="android:textColor">@color/government_text_primary</item>
-
-        <!-- Size hierarchy for government documents -->
+    <style name="Theme.CivicTrack.ActionBar.Title" parent="TextAppearance.Material3.ActionBar.Title">
+        <item name="android:textColor">@color/text_on_primary</item>
         <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
+    </style>
 
-        <!-- Letter spacing for better readability -->
-        <item name="android:letterSpacing">0.02</item>
+    <!-- Text appearance styles -->
+    <style name="TextAppearance.CivicTrack.HeadlineLarge" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textSize">32sp</item>
+        <item name="android:letterSpacing">-0.01</item>
+    </style>
 
-        <!-- All-caps styling for official documents (optional) -->
-        <item name="android:textAllCaps">false</item>
+    <style name="TextAppearance.CivicTrack.HeadlineMedium" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textSize">24sp</item>
+    </style>
 
-        <!-- Shadow for better contrast on light backgrounds -->
-        <item name="android:shadowColor">@android:color/black</item>
-        <item name="android:shadowRadius">0.1</item>
-        <item name="android:shadowDx">0.5</item>
-        <item name="android:shadowDy">0.5</item>
+    <style name="TextAppearance.CivicTrack.TitleLarge" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:lineSpacingExtra">4sp</item>
+    </style>
+
+    <style name="TextAppearance.CivicTrack.TitleMedium" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="TextAppearance.CivicTrack.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:lineSpacingExtra">4sp</item>
+    </style>
+
+    <style name="TextAppearance.CivicTrack.BodyMedium" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineSpacingExtra">4sp</item>
+    </style>
+
+    <style name="TextAppearance.CivicTrack.LabelLarge" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:letterSpacing">0.01</item>
+    </style>
+
+    <!-- Button Styles -->
+    <style name="Widget.CivicTrack.Button" parent="Widget.Material3.Button">
+        <item name="android:textAppearance">@style/TextAppearance.CivicTrack.LabelLarge</item>
+    </style>
+    <style name="Widget.CivicTrack" parent="Widget.Material3.Button">
+        <item name="android:textAppearance">@style/TextAppearance.CivicTrack.LabelLarge</item>
+    </style>
+
+    <style name="Theme.CivicTrack.Button.Primary" parent="Widget.Material3.Button">
+        <item name="android:textColor">@color/text_on_primary</item>
+        <item name="backgroundTint">@color/primary_blue</item>
+        <item name="android:paddingVertical" tools:targetApi="26">12dp</item>
+    </style>
+
+    <style name="Theme.CivicTrack.Button.Text" parent="Widget.Material3.Button.TextButton">
+        <item name="android:textColor">@color/primary_blue</item>
+    </style>
+
+    <style name="Theme.CivicTrack.TextButton" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:textColor">@color/primary_blue</item>
+    </style>
+
+    <!-- Progress Bar -->
+    <style name="Theme.CivicTrack.ProgressBar" parent="Widget.Material3.CircularProgressIndicator">
+        <item name="indicatorColor">@color/primary_blue</item>
+    </style>
+
+    <!-- Divider -->
+    <style name="Theme.CivicTrack.Divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+    </style>
+
+    <!-- Text Input Layout -->
+    <style name="Theme.CivicTrack.TextInputLayout.Outlined" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/primary_blue</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.Material3.MediumComponent</item>
+        <item name="hintTextColor">@color/text_secondary</item>
+    </style>
+
+    <style name="Theme.CivicTrack.Card.Success" parent="Theme.CivicTrack.Card">
+        <item name="cardBackgroundColor">@color/success_green_50</item>
+        <item name="strokeColor">@color/success_green</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+
+    <!-- Status Badge -->
+    <style name="Widget.CivicTrack.StatusBadge.HighPriority">
+        <item name="android:textColor">@color/surface_white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:paddingStart">@dimen/spacing_md</item>
+        <item name="android:paddingEnd">@dimen/spacing_md</item>
+        <item name="android:paddingTop">@dimen/spacing_sm</item>
+        <item name="android:paddingBottom">@dimen/spacing_sm</item>
+        <item name="android:background">@drawable/bg_status_high_priority_pill</item>
+    </style>
+    <style name="Widget.CivicTrack.StatusBadge">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:paddingStart">@dimen/spacing_md</item>
+        <item name="android:paddingEnd">@dimen/spacing_md</item>
+        <item name="android:paddingTop">@dimen/spacing_sm</item>
+        <item name="android:paddingBottom">@dimen/spacing_sm</item>
+        <item name="android:background">@drawable/bg_status_pill</item>
     </style>
 
 </resources>

@@ -10,6 +10,15 @@
         <action
             android:id="@+id/action_homeFragment_to_issueDetailFragment"
             app:destination="@id/issueDetailFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_helpSupportFragment"
+            app:destination="@id/helpSupportFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_aboutUsFragment"
+            app:destination="@id/aboutUsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_contactUsFragment"
+            app:destination="@id/contactUsFragment" />
     </fragment>
 
     <fragment
@@ -39,4 +48,16 @@
         android:id="@+id/profileFragment"
         android:name="com.example.civic_trackapplication.ProfileFragment"
         android:label="Profile" />
+    <fragment
+        android:id="@+id/helpSupportFragment"
+        android:name="com.example.civic_trackapplication.HelpSupportFragment"
+        android:label="Help &amp; Support" />
+    <fragment
+        android:id="@+id/aboutUsFragment"
+        android:name="com.example.civic_trackapplication.AboutUsFragment"
+        android:label="About Us" />
+    <fragment
+        android:id="@+id/contactUsFragment"
+        android:name="com.example.civic_trackapplication.ContactUsFragment"
+        android:label="Login" />
 </navigation>

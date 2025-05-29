@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/helpSupportFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_primary"
+    android:padding="@dimen/screen_padding">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/helpTitle"
+            style="@style/TextAppearance.CivicTrack.HeadlineMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/help_support"
+            android:textColor="@color/primary_blue"
+            android:layout_marginBottom="@dimen/spacing_md" />
+
+        <!-- Card: Contact Info -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Theme.CivicTrack.Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_md">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_md">
+
+                <TextView
+                    style="@style/TextAppearance.CivicTrack.BodyMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="If you're facing issues using CivicTrack, we're here for you. You can report bugs, request features, or get in touch with our support team. Check the FAQs below or use the contact button to reach out directly."
+                    android:layout_marginBottom="@dimen/spacing_xs" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Card: FAQs -->
+        <!-- FAQ Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Frequently Asked Questions"
+            style="@style/TextAppearance.CivicTrack.TitleLarge"
+            android:textColor="@color/primary_blue"
+            android:layout_marginBottom="12dp" />
+
+        <!-- FAQ 1 -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Theme.CivicTrack.Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:elevation="2dp"
+            android:backgroundTint="@color/surface_white"
+            android:foreground="?attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="How can I report an issue?"
+                    style="@style/TextAppearance.CivicTrack.TitleMedium" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tap on 'Report Issue', take a photo, select location, and submit. Our team will verify it shortly."
+                    style="@style/TextAppearance.CivicTrack.BodyMedium"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- FAQ 2 -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Theme.CivicTrack.Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:elevation="2dp"
+            android:backgroundTint="@color/surface_white"
+            android:foreground="?attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="How do I track my submitted issue?"
+                    style="@style/TextAppearance.CivicTrack.TitleMedium" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Go to 'My Reports' in the app to see the status (Pending, In Progress, or Resolved) of your issues."
+                    style="@style/TextAppearance.CivicTrack.BodyMedium"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- FAQ 3 -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Theme.CivicTrack.Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:elevation="2dp"
+            android:backgroundTint="@color/surface_white"
+            android:foreground="?attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Why does the app need location permission?"
+                    style="@style/TextAppearance.CivicTrack.TitleMedium" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Your location helps accurately report the issue’s position so the concerned authorities can respond faster."
+                    style="@style/TextAppearance.CivicTrack.BodyMedium"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- FAQ 4 -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Theme.CivicTrack.Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:elevation="2dp"
+            android:backgroundTint="@color/surface_white"
+            android:foreground="?attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Can I edit a submitted report?"
+                    style="@style/TextAppearance.CivicTrack.TitleMedium" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Once submitted, reports cannot be edited. However, you may contact support to request changes."
+                    style="@style/TextAppearance.CivicTrack.BodyMedium"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- FAQ 5 -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Theme.CivicTrack.Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:elevation="2dp"
+            android:backgroundTint="@color/surface_white"
+            android:foreground="?attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="What if my issue is not resolved?"
+                    style="@style/TextAppearance.CivicTrack.TitleMedium" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="You can mark it as unresolved and escalate it through the support option provided in the app."
+                    style="@style/TextAppearance.CivicTrack.BodyMedium"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+</ScrollView>

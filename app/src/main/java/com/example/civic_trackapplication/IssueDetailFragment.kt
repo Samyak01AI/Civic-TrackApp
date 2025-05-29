@@ -52,7 +52,7 @@ class IssueDetailFragment : Fragment() {
         binding.apply {
             tvTitle.text = issue.title
             tvStatus.text = issue.status
-            tvLocation.text = "${issue.location.latitude}, ${issue.location.longitude}"
+            tvLocation.text = issue.location.toString()
 
             Glide.with(this@IssueDetailFragment)
                 .load(issue.imageUrl)

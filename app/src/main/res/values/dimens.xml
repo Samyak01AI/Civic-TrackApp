@@ -1,6 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="stroke_thin">1dp</dimen>
-    <dimen name="elevation_low">2dp</dimen>
+    <!-- Screen and Layout Dimensions -->
+    <dimen name="screen_padding">16dp</dimen>
+    <dimen name="screen_padding_small">12dp</dimen>
+    <dimen name="screen_padding_large">22dp</dimen>
 
+    <!-- Bottom Navigation -->
+    <dimen name="bottom_nav_height">64dp</dimen>
+    <dimen name="bottom_nav_icon_size">24dp</dimen>
+
+    <!-- Card and Component Dimensions -->
+    <dimen name="card_corner_radius">16dp</dimen>
+    <dimen name="card_elevation">4dp</dimen>
+    <dimen name="card_padding">16dp</dimen>
+    <dimen name="card_margin">8dp</dimen>
+
+    <!-- Button Dimensions -->
+    <dimen name="button_corner_radius">12dp</dimen>
+    <dimen name="button_min_height">48dp</dimen>
+    <dimen name="button_padding_horizontal">24dp</dimen>
+
+    <!-- Text Input Dimensions -->
+    <dimen name="input_corner_radius">12dp</dimen>
+    <dimen name="input_min_height">56dp</dimen>
+
+    <!-- Spacing -->
+    <dimen name="spacing_xs">4dp</dimen>
+    <dimen name="spacing_sm">8dp</dimen>
+    <dimen name="spacing_md">16dp</dimen>
+    <dimen name="spacing_lg">24dp</dimen>
+    <dimen name="spacing_xl">32dp</dimen>
+
+    <!-- Elevation -->
+    <dimen name="elevation_small">2dp</dimen>
+    <dimen name="elevation_medium">4dp</dimen>
+    <dimen name="elevation_large">8dp</dimen>
+    <dimen name="elevation_extra_large">16dp</dimen>
 </resources>

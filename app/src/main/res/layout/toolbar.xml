@@ -8,10 +8,10 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/government_primary"
+        android:background="#D2E1E9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:titleTextAppearance="@style/TextAppearance.CivicTrack.Headline"
-        app:titleTextColor="@color/government_white"/>
+        app:titleTextAppearance="@style/TextAppearance.AppCompat.Headline"
+        app:titleTextColor="@color/background_dark"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,55 +1,66 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Filename: logout_confirmation_dialog.xml -->
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="300dp"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="@dimen/spacing_md"
     android:background="@drawable/bg_tile"
-    android:padding="20dp"
-    android:gravity="center">
-
-    <ImageView
-        android:id="@+id/imgLogout"
-        android:layout_width="89dp"
-        android:layout_height="79dp"
-        android:layout_marginBottom="12dp"
-        android:src="@drawable/ic_sure" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Are you sure you want to logout?"
-        android:textColor="#333"
-        android:textSize="16sp"
-        android:layout_marginBottom="16dp"
-        android:gravity="center"/>
+    app:cardCornerRadius="@dimen/card_corner_radius"
+    app:cardElevation="@dimen/elevation_medium">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginTop="8dp">
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_lg"
+        android:gravity="center_horizontal">
 
-        <Button
-            android:id="@+id/btnYes"
-            android:layout_width="0dp"
+        <!-- Icon -->
+        <ImageView
+            android:id="@+id/imgLogout"
+            android:layout_width="89dp"
+            android:layout_height="79dp"
+            android:layout_marginBottom="@dimen/spacing_sm"
+            android:src="@drawable/ic_sure"
+            android:contentDescription="@string/logout_icon_desc" />
+
+        <!-- Text -->
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Yes"
-            android:textColor="@android:color/white"
-            android:backgroundTint="#5D5FEF"/>
+            android:text="@string/logout_confirmation"
+            style="@style/TextAppearance.CivicTrack.BodyLarge"
+            android:gravity="center"
+            android:layout_marginBottom="@dimen/spacing_md" />
 
-        <View
-            android:layout_width="12dp"
-            android:layout_height="0dp" />
-
-        <Button
-            android:id="@+id/btnNo"
-            android:layout_width="0dp"
+        <!-- Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="No"
-            android:textColor="@android:color/white"
-            android:backgroundTint="#9A9A9A"/>
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/spacing_sm">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnYes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/yes"
+                style="@style/Theme.CivicTrack.Button.Primary" />
+
+            <View
+                android:layout_width="@dimen/spacing_sm"
+                android:layout_height="match_parent" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnNo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/no"
+                android:backgroundTint="@color/neutral_500"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</com.google.android.material.card.MaterialCardView>

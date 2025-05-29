@@ -1,79 +1,95 @@
 package com.example.civic_trackapplication.adapter
 
+import android.graphics.Color
+import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.civic_trackapplication.Issue
 import com.example.civic_trackapplication.R
-import com.example.civic_trackapplication.databinding.ItemAdminIssueBinding
+import com.example.civic_trackapplication.databinding.ItemAdminIssuesBinding
+import com.google.firebase.firestore.FirebaseFirestore
 
 class AdminIssuesAdapter(
-    private val onStatusChanged: (Issue, String) -> Unit
-) : ListAdapter<Issue, AdminIssuesAdapter.ViewHolder>(DiffCallback()) {
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): ViewHolder {
-        TODO("Not yet implemented")
-    }
+    private val onStatusChanged: (issueId: String, newStatus: String) -> Unit
+) : RecyclerView.Adapter<AdminIssuesAdapter.IssueViewHolder>() {
 
-    override fun onBindViewHolder(
-        holder: ViewHolder,
-        position: Int
-    ) {
-        TODO("Not yet implemented")
-    }
-
-    inner class ViewHolder(private val binding: ItemAdminIssueBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    private var issues = mutableListOf<Issue>()
+    inner class IssueViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val binding: ItemAdminIssuesBinding = ItemAdminIssuesBinding.bind(itemView)
 
         fun bind(issue: Issue) {
-            binding.apply {
+            with(binding) {
                 tvTitle.text = issue.title
-                tvUser.text = "Submitted by: ${issue.userId.take(8)}..." // Or fetch username
-                tvDate.text = issue.timestamp.toDate().toString()
-
-                // Status spinner
-                ArrayAdapter.createFromResource(
-                    root.context,
-                    R.array.issue_statuses,
-                    android.R.layout.simple_spinner_item
-                ).also { adapter ->
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    spinnerStatus.adapter = adapter
-                    spinnerStatus.setSelection(
-                        adapter.getPosition(issue.status.replaceFirstChar { it.uppercase() })
-                    )
+                tvLocation.text = issue.location
+                val status = issue.status
+                Log.d("status", status)
+                if (status == "Pending") {
+                    progressBar.progress = 5
+                }
+                if (status == "In Progress") {
+                    progressBar.progress = 50
+                }
+                if (status == "Resolved") {
+                    progressBar.progress = 100
+                }
+                val priority = issue.priorityScore
+                Log.d("priority", priority.toString())
+                if(priority<5 && priority>=0){
+                    tvStatus.text = "Low Priority"
+                    tvStatus.setBackgroundColor(Color.GREEN)
+                }
+                else if(priority < 8 && priority >= 5){
+                    tvStatus.text = "Medium Priority"
+                    tvStatus.setBackgroundColor(Color.YELLOW)
+                }
+                else if(priority <= 8){
+                    tvStatus.text = "High Priority"
+                    tvStatus.setBackgroundColor(Color.RED)
                 }
 
-                spinnerStatus.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, pos: Int, id: Long) {
-                        val newStatus = root.context.resources.getStringArray(R.array.issue_statuses)[pos]
-                        if (newStatus != issue.status) {
-                            onStatusChanged(issue, newStatus)
-                        }
+                radioStatusGroup.setOnCheckedChangeListener(null)
+                when(issue.status) {
+                    "Pending" -> radioPending.isChecked = true
+                    "In Progress" -> radioInProgress.isChecked = true
+                    "Resolved" -> radioResolved.isChecked = true
+                }
+
+                radioStatusGroup.setOnCheckedChangeListener { _, checkedId ->
+                    val newStatus = when(checkedId) {
+                        R.id.radioPending -> "Pending"
+                        R.id.radioInProgress -> "In Progress"
+                        R.id.radioResolved -> "Resolved"
+                        else -> issue.status
                     }
-                    override fun onNothingSelected(p0: AdapterView<*>?) {}
+                    if (newStatus != issue.status) {
+                        onStatusChanged(issue.id, newStatus)
+                    }
                 }
-
-                // Load image with Glide
-                Glide.with(root)
-                    .load(issue.imageUrl)
-                    .placeholder(R.drawable.ic_placeholder)
-                    .into(ivImage)
             }
         }
     }
 
-    class DiffCallback : DiffUtil.ItemCallback<Issue>() {
-        override fun areItemsTheSame(oldItem: Issue, newItem: Issue) =
-            oldItem.id == newItem.id
-        override fun areContentsTheSame(oldItem: Issue, newItem: Issue) =
-            oldItem == newItem
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IssueViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_admin_issues, parent, false)
+        return IssueViewHolder(view)
+    }
+
+    override fun onBindViewHolder(
+        holder: IssueViewHolder,
+        position: Int
+    ) {
+        holder.bind(issues[position])
+    }
+
+
+    override fun getItemCount(): Int = issues.size
+
+    fun submitList(newList: List<Issue>) {
+        issues.clear()
+        issues.addAll(newList)
+        notifyDataSetChanged()
     }
 }

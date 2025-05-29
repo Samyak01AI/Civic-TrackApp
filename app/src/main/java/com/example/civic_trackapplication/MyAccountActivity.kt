@@ -67,9 +67,9 @@ class MyAccountActivity : AppCompatActivity() {
             startActivity(Intent(this, ReportIssueActivity::class.java))
         }
 
-        cardHelpSupport.setOnClickListener {
+/*        cardHelpSupport.setOnClickListener {
             startActivity(Intent(this, HelpSupportActivity::class.java))
-        }
+        }*/
 
         cardLogout.setOnClickListener {
             showLogoutDialog()

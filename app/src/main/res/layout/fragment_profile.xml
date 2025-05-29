@@ -1,136 +1,181 @@
-<?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/background_primary">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="18dp">
 
-        <!-- Profile Header -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp">
-
-            <ImageView
-                android:id="@+id/ivProfile"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginEnd="16dp"
-                android:contentDescription="Profile image"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/ivProfile"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tvName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    android:textStyle="bold"/>
-
-                <TextView
-                    android:id="@+id/tvEmail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="?android:attr/textColorSecondary"/>
-
-                <TextView
-                    android:id="@+id/tvJoinDate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:textColor="?android:attr/textColorSecondary"/>
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/btnEditProfile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:text="Edit"/>
-        </RelativeLayout>
-
-        <!-- Settings Section -->
+        <!-- Profile Header Card -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:cardElevation="2dp">
+            app:cardCornerRadius="24dp"
+            app:cardElevation="6dp"
+            android:padding="24dp"
+            android:layout_marginBottom="24dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/ivProfile"
+                    android:layout_width="86dp"
+                    android:layout_height="86dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="5dp"
+                    android:contentDescription="@string/profile_image"
+                    android:scaleType="centerCrop"
+                    android:background="@drawable/circle_bg" />
+
+                <LinearLayout
+                    android:id="@+id/profileTexts"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/ivProfile"
+                    android:layout_alignParentTop="true"
+                    android:padding="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/TextAppearance.CivicTrack.BodyMedium"
+                        android:id="@+id/tvName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_primary" />
+
+                    <TextView
+                        style="@style/TextAppearance.CivicTrack.BodyMedium"
+                        android:id="@+id/tvEmail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginTop="4dp" />
+
+                    <TextView
+                        style="@style/TextAppearance.CivicTrack.BodyMedium"
+                        android:id="@+id/tvJoinDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginTop="4dp" />
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/btnEditProfile"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:backgroundTint="#E5ECFA"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/edit"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    app:cornerRadius="24dp" />
+            </RelativeLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Preferences Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="4dp"
+            android:padding="24dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="5dp"
+                android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="match_parent"
+                    style="@style/TextAppearance.CivicTrack.TitleLarge"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Preferences"
-                    android:textStyle="bold"/>
+                    android:text="@string/preferences"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginLeft="9dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginLeft="5dp"
+
                     android:gravity="center_vertical">
 
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginEnd="16dp"/>
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/moon"
+                        android:layout_marginEnd="16dp" />
 
                     <TextView
+                        style="@style/TextAppearance.CivicTrack.BodyMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Dark Mode"/>
+                        android:textSize="18sp"
+                        android:text="@string/dark_mode" />
 
-                    <Switch
+                    <com.google.android.material.switchmaterial.SwitchMaterial
                         android:id="@+id/switchDarkMode"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- My Issues Section -->
+        <!-- My Reported Issues Title -->
         <TextView
+            style="@style/TextAppearance.CivicTrack.TitleMedium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="My Reported Issues"
-            android:textStyle="bold"/>
+            android:text="@string/my_reported_issues"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:layout_marginBottom="16dp" />
 
+        <!-- Issues RecyclerView -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvIssues"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"/>
+            android:clipToPadding="false"
+            android:paddingBottom="24dp" />
 
+        <!-- Empty State Text -->
         <TextView
             android:id="@+id/tvEmptyState"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:text="You haven't reported any issues yet"
-            android:visibility="gone"/>
+            android:text="@string/no_reported_issues_yet"
+            android:textAlignment="center"
+            android:textColor="@color/text_secondary"
+            android:layout_marginTop="24dp"
+            android:visibility="gone" />
 
+        <!-- Logout Button -->
         <Button
+            style="@style/Widget.Material3.Button"
             android:id="@+id/btnLogout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Logout"
-            style="@style/Widget.Material3.Button.OutlinedButton"/>
+            android:layout_height="56dp"
+            android:text="@string/logout"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/buttonColor"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="32dp"
+            app:cornerRadius="28dp" />
     </LinearLayout>
 </ScrollView>
