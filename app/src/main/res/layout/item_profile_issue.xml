@@ -14,6 +14,7 @@
         android:padding="16dp">
 
         <TextView
+            style="@style/TextAppearance.CivicTrack.TitleMedium"
             android:id="@+id/tvTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -32,6 +33,7 @@
                 android:layout_marginEnd="8dp"/>
 
             <TextView
+                style="@style/TextAppearance.CivicTrack.BodyMedium"
                 android:id="@+id/tvStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -43,6 +45,7 @@
                 android:background="?android:attr/textColorSecondary"/>
 
             <TextView
+                style="@style/TextAppearance.CivicTrack.BodyMedium"
                 android:id="@+id/tvDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

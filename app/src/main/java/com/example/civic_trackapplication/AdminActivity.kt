@@ -1,72 +1,64 @@
 package com.example.civic_trackapplication
-
 import android.os.Bundle
-import android.view.View
-import android.widget.AdapterView
-import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.civic_trackapplication.adapter.AdminIssuesAdapter
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.example.civic_trackapplication.databinding.ActivityAdminBinding
-import com.example.civic_trackapplication.viewmodels.AdminViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class AdminActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAdminBinding
-    private val viewModel: AdminViewModel by viewModels()
-    private lateinit var issuesAdapter: AdminIssuesAdapter
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAdminBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setupRecyclerView()
-        observeIssues()
-        setupFilter()
+        setupNavigation()
     }
 
-    private fun setupRecyclerView() {
-        issuesAdapter = AdminIssuesAdapter { issue, newStatus ->
-            viewModel.updateIssueStatus(issue.id, newStatus)
+    private fun setupNavigation() {
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.admin_nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
+
+        // Connect BottomNavigationView with NavController
+        binding.bottomNavigation.setupWithNavController(navController)
+
+        binding.bottomNavigation.setOnItemSelectedListener { item ->
+            Log.d("NAV_DEBUG", "Selected item: ${item.itemId}")
+            when(item.itemId) {
+                R.id.nav_issues -> {
+                    navController.navigate(R.id.adminFragment)
+                    true
+                }
+                R.id.nav_users -> {
+                    navController.navigate(R.id.usersFragment)
+                    true
+                }
+                R.id.nav_stats -> {
+                    navController.navigate(R.id.statsFragment)
+                    true
+                }
+                else -> false
+            }
         }
 
-        binding.rvIssues.apply {
-            adapter = issuesAdapter
-            layoutManager = LinearLayoutManager(this@AdminActivity)
-            addItemDecoration(
-                DividerItemDecoration(
-                    this@AdminActivity,
-                    LinearLayoutManager.VERTICAL
-                )
-            )
-        }
-    }
-
-    private fun observeIssues() {
-        viewModel.issues.observe(this) { issues ->
-            issuesAdapter.submitList(issues)
-            binding.emptyState.root.visibility = if (issues.isEmpty()) View.VISIBLE else View.GONE
-        }
-
-        viewModel.isAdmin.observe(this) { isAdmin ->
-            if (!isAdmin) {
-                Toast.makeText(this, "Admin access required", Toast.LENGTH_SHORT).show()
-                finish()
+        // Optional: Add fragment transition animations
+        navHostFragment.navController.addOnDestinationChangedListener {
+                _, destination, _ ->
+            when (destination.id) {
+                R.id.adminFragment -> binding.bottomNavigation.menu.findItem(R.id.nav_issues)?.isChecked = true
+                R.id.usersFragment -> binding.bottomNavigation.menu.findItem(R.id.nav_users)?.isChecked = true
+                R.id.statsFragment -> binding.bottomNavigation.menu.findItem(R.id.nav_stats)?.isChecked = true
             }
         }
     }
 
-    private fun setupFilter() {
-        binding.filterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
-                viewModel.setFilter(AdminViewModel.StatusFilter.entries[pos])
-            }
-            override fun onNothingSelected(p0: AdapterView<*>?) {}
-        }
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 }

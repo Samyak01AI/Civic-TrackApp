@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.civic_trackapplication.Issue
+import com.example.civic_trackapplication.Issue.Companion.formatTimestampToMonthDate
 import com.example.civic_trackapplication.R
 import com.example.civic_trackapplication.databinding.ItemProfileIssueBinding
 
@@ -33,11 +34,11 @@ class ProfileIssueViewHolder(
         binding.apply {
             tvTitle.text = issue.title
             tvStatus.text = issue.status.replaceFirstChar { it.uppercase() }
-            tvDate.text = issue.timestamp.toDate().toString()
+            tvDate.text =  formatTimestampToMonthDate(issue.timestamp)
 
             val colorRes = when (issue.status) {
-                "resolved" -> R.color.status_resolved
-                "in_progress" -> R.color.status_in_progress
+                "resolved" -> R.color.status_approved
+                "in_progress" -> R.color.status_processing
                 else -> R.color.status_pending
             }
 

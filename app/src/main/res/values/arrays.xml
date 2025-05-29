@@ -8,7 +8,6 @@
         <item>Resolved</item>
     </string-array>
 
-    <!-- Status values (must match Firestore) -->
     <string-array name="issue_statuses">
         <item>Pending</item>
         <item>In Progress</item>
@@ -19,5 +18,12 @@
         <item>pending</item>
         <item>in_progress</item>
         <item>resolved</item>
+    </string-array>
+
+    <string-array name="filter_options">
+        <item>All Issues</item>
+        <item>Pending</item>
+        <item>In Progress</item>
+        <item>Resolved</item>
     </string-array>
 </resources>

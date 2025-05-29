@@ -34,7 +34,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Issue Title"
-            android:textAppearance="?attr/textAppearanceHeadlineSmall"
             android:textColor="?attr/colorOnSurface"
             android:paddingBottom="8dp" />
 
@@ -43,8 +42,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Issue description goes here..."
-            android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:textColor="?attr/colorOnSurfaceVariant"
             android:paddingBottom="16dp" />
 
         <com.google.android.material.textview.MaterialTextView
@@ -52,7 +49,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Status: Critical"
-            android:textAppearance="?attr/textAppearanceBodyLarge"
             android:textColor="@color/design_default_color_error"
             android:paddingBottom="8dp" />
 
@@ -60,8 +56,6 @@
             android:id="@+id/tvLocation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Lat, Lng"
-            android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:textColor="?attr/colorOnSurfaceVariant" />
+            android:text="Lat, Lng" />
     </LinearLayout>
 </ScrollView>

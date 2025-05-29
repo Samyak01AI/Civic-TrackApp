@@ -2,15 +2,20 @@ package com.example.civic_trackapplication
 
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.os.postDelayed
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.example.civic_trackapplication.adapter.StatusIssuesAdapter
 import com.example.civic_trackapplication.databinding.FragmentStatusBinding
 import com.example.civic_trackapplication.viewmodels.StatusViewModel
@@ -25,8 +30,11 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.google.android.material.chip.Chip
+import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.util.Locale
+import java.util.logging.Handler
 
 class StatusFragment : Fragment() {
     private var _binding: FragmentStatusBinding? = null
@@ -52,9 +60,19 @@ class StatusFragment : Fragment() {
         setupRecyclerView()
         setupFilterChips()
         setupCharts()
-        observeChartData()
         observeIssues()
         setupSwipeRefresh()
+        observeChartData()
+
+        binding.chipGroup.setOnCheckedChangeListener { group, checkedId ->
+            val selectedChip = group.findViewById<Chip>(checkedId)
+            val status = selectedChip?.text?.toString()
+
+            if (status != null) {
+                filterIssuesByCategory(status)
+            }
+        }
+
     }
 
     private fun setupRecyclerView() {
@@ -76,8 +94,13 @@ class StatusFragment : Fragment() {
             setEntryLabelColor(Color.BLACK)
             setEntryLabelTextSize(12f)
             animateY(1000, Easing.EaseInOutQuad)
-        }
 
+            setDrawEntryLabels(true)
+            setHoleColor(Color.TRANSPARENT)
+            setTransparentCircleAlpha(0)
+            setDrawCenterText(false)
+            setExtraOffsets(20f, 0f, 20f, 20f)
+        }
         barChart = binding.barChart.apply {
             setDrawValueAboveBar(true)
             description.isEnabled = false
@@ -96,32 +119,76 @@ class StatusFragment : Fragment() {
         }
     }
 
-    private fun updatePieChart(issues: List<Issue>) {
-        val statusCount = issues.groupingBy { it.status }.eachCount()
+  private fun updatePieChart(issues: List<Issue>) {
+        // Debug: Print all received issues
+        Log.d("ChartDebug", "Received ${issues.size} issues")
+        issues.forEach { issue ->
+            Log.d("ChartDebug", "Issue ID: ${issue.id}, Status: ${issue.status}")
+        }
+
+        // Group and count statuses (case-insensitive)
+        val statusCount = issues
+            .filter { !it.status.isNullOrEmpty() }
+            .groupingBy { it.status!!.lowercase().trim() }
+            .eachCount()
+
+        Log.d("ChartDebug", "Status counts: $statusCount")
 
         val entries = listOf(
             PieEntry(statusCount["pending"]?.toFloat() ?: 0f, "Pending"),
-            PieEntry(statusCount["in_progress"]?.toFloat() ?: 0f, "In Progress"),
+            PieEntry(statusCount["in progress"]?.toFloat() ?: 0f, "In Progress"),
             PieEntry(statusCount["resolved"]?.toFloat() ?: 0f, "Resolved")
-        )
+        ).filter { it.value > 0f }
+
+        if (entries.isEmpty()) {
+            Log.w("ChartDebug", "No valid data to display in pie chart")
+            binding.pieChart.clear()
+            binding.pieChart.invalidate()
+            return
+        }
+
+        Log.d("ChartDebug", "Chart entries: $entries")
 
         val dataSet = PieDataSet(entries, "").apply {
             colors = listOf(
                 ContextCompat.getColor(requireContext(), R.color.status_pending),
-                ContextCompat.getColor(requireContext(), R.color.status_in_progress),
-                ContextCompat.getColor(requireContext(), R.color.status_resolved)
+                ContextCompat.getColor(requireContext(), R.color.status_processing),
+                ContextCompat.getColor(requireContext(), R.color.status_approved)
             )
-            valueTextSize = 12f
-            valueTextColor = Color.WHITE
+            valueTextSize = 14f
+            valueTextColor = Color.BLACK
+        }
+
+        binding.pieChart.data = PieData(dataSet)
+        binding.pieChart.invalidate()
+        binding.pieChart.animateY(1000)
+    }
+
+    private fun testPieChart() {
+        val testEntries = listOf(
+            PieEntry(25f, "Pending"),
+            PieEntry(35f, "In Progress"),
+            PieEntry(40f, "Resolved")
+        )
+
+        val dataSet = PieDataSet(testEntries, "").apply {
+            colors = listOf(
+                ContextCompat.getColor(requireContext(), R.color.status_pending),
+                ContextCompat.getColor(requireContext(), R.color.status_processing),
+                ContextCompat.getColor(requireContext(), R.color.status_approved)
+            )
+            valueTextSize = 14f
+            valueTextColor = Color.BLACK
         }
 
         pieChart.data = PieData(dataSet)
         pieChart.invalidate()
+        pieChart.animateY(1000)
     }
 
     private fun updateBarChart(issues: List<Issue>) {
         val dailyCount = issues.groupBy {
-            SimpleDateFormat("dd MMM", Locale.getDefault()).format(it.timestamp.toDate())
+            SimpleDateFormat("dd MMM", Locale.getDefault()).format(it.timestamp)
         }.mapValues { it.value.size }
 
         val entries = dailyCount.entries.mapIndexed { index, entry ->
@@ -131,7 +198,7 @@ class StatusFragment : Fragment() {
         val xAxisLabels = dailyCount.keys.toList()
 
         val dataSet = BarDataSet(entries, "Issues per Day").apply {
-            color = ContextCompat.getColor(requireContext(), R.color.m3_primary_container)
+            color = ContextCompat.getColor(requireContext(), R.color.status_processing)
             valueTextSize = 10f
         }
 
@@ -169,6 +236,21 @@ class StatusFragment : Fragment() {
         binding.swipeRefresh.setOnRefreshListener {
             viewModel.refreshIssues()
         }
+    }
+
+    private fun filterIssuesByCategory(status: String) {
+        val db = FirebaseFirestore.getInstance()
+
+        db.collection("Issues")
+            .whereEqualTo("status", status)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                val filteredIssues = querySnapshot.toObjects(Issue::class.java)
+                issuesAdapter.submitList(filteredIssues)
+            }
+            .addOnFailureListener { exception ->
+                Toast.makeText(requireContext(), "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun navigateToIssueDetail(issueId: String) {

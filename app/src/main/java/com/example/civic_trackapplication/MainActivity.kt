@@ -23,6 +23,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlin.getValue
 
 class MainActivity : AppCompatActivity() {
@@ -35,6 +36,24 @@ class MainActivity : AppCompatActivity() {
         val chatbotButton = findViewById<ImageButton>(R.id.chatbot)
         val webView = findViewById<WebView>(R.id.chat_webview)
 
+        FirebaseApp.initializeApp(this)
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val token = task.result
+                Log.d("FCM", "✅ Token: $token")
+                // Optionally send token to Firestore or your server
+            } else {
+                Log.e("FCM", "❌ Failed to get token", task.exception)
+            }
+        }
+
+        FirebaseMessaging.getInstance().subscribeToTopic("issues")
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d("FCM", "✅ Subscribed to topic: issues")
+                }
+            }
+
         chatbotButton.setOnClickListener {
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.END)
             drawerLayout.openDrawer(GravityCompat.END)
@@ -46,7 +65,6 @@ class MainActivity : AppCompatActivity() {
                 webView.loadUrl("https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/10/04/20250510041211-1NHXRUS9.json")
             }
         })
-
 
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment

@@ -57,6 +57,17 @@ class StatusViewModel : ViewModel() {
             _issuesForCharts.value = issues.takeLast(30) // Last 30 for charts
         }
     }
+    fun loadIssues() {
+        firestore.collection("Issues").get()
+            .addOnSuccessListener { documents ->
+                val issues = documents.toObjects(Issue::class.java)
+                _issuesForCharts.value = issues // Make sure you're posting to LiveData
+                Log.d("ViewModel", "Loaded ${issues.size} issues")
+            }
+            .addOnFailureListener { e ->
+                Log.e("ViewModel", "Error loading issues", e)
+            }
+    }
 
     enum class StatusFilter { ALL, PENDING, IN_PROGRESS, RESOLVED }
 }

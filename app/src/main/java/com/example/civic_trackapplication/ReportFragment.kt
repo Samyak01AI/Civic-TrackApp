@@ -5,6 +5,7 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
+import android.location.Geocoder
 import android.location.Location
 import android.net.Uri
 import android.os.Bundle
@@ -34,18 +35,14 @@ import java.util.Locale
 import androidx.core.net.toUri
 import com.example.civic_trackapplication.viewmodels.LocationViewModel
 import com.example.civic_trackapplication.viewmodels.ReportViewModel
+import kotlin.collections.isNotEmpty
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-private const val REQUEST_CAMERA = 100
-
 class ReportFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-
-
     private var param1: String? = null
     private var param2: String? = null
     private val viewModel: ReportViewModel by viewModels()
@@ -82,7 +79,7 @@ class ReportFragment : Fragment() {
             if (latLng != null) {
                 // Use the selected location
                 Log.d("ReportFragment", "Selected location: $latLng")
-                binding.locationText.text = "Latitude: ${latLng.latitude}, Longitude: ${latLng.longitude}"
+                binding.locationText.text = getAddressFromLatLng(latLng.latitude, latLng.longitude)
                 selectedLocation = latLng
                 // e.g., assign it to a local variable or pass to submitIssue()
             }
@@ -138,39 +135,36 @@ class ReportFragment : Fragment() {
                 viewModel.submitIssue(
                     title,
                     desc,
-                    selectedLocation!!,
+                    location,
+                    category.toString(),
                     imageUri
                 )
             }
         }
 
     }
-
-    companion object {
-        /**
-        * Use this factory method to create a new instance of
-        * this fragment using the provided parameters.
-        *
-        * @param param1 Parameter 1.
-        * @param param2 Parameter 2.
-        * @return A new instance of fragment ReportFragment.
-        */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ReportFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    fun getAddressFromLatLng(latitude: Double, longitude: Double): String {
+        val geocoder = Geocoder(requireContext(), Locale.getDefault())
+        return try {
+            val addresses = geocoder.getFromLocation(latitude, longitude, 1)
+            if (addresses != null && addresses.isNotEmpty()) {
+                val address = addresses[0]
+                // You can customize how the address string is formed
+                address.getAddressLine(0) ?: "Unknown Address"
+            } else {
+                "Address not found"
             }
-        const val REQUEST_CAMERA = 100
+        } catch (e: Exception) {
+            e.printStackTrace()
+            "Error retrieving address"
+        }
     }
+
     private fun launchCamera() {
         val photoFile = createImageFile()
         imageUri = FileProvider.getUriForFile(
             requireContext(),
-            "${context?.packageName}.fileprovider",
+            "com.example.civic_trackapplication.fileprovider",
             photoFile
         )
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
@@ -217,7 +211,6 @@ class ReportFragment : Fragment() {
         viewModel.submissionStatus.observe(viewLifecycleOwner) { status ->
             when (status) {
                 is ReportViewModel.SubmissionStatus.Success -> {
-                    // binding.progressBar.visibility = View.GONE
                     Toast.makeText(
                         requireContext(),
                         "Issue reported successfully!",
@@ -240,9 +233,29 @@ class ReportFragment : Fragment() {
             }
         }
     }
-
+    companion object {
+        /**
+         * Use this factory method to create a new instance of
+         * this fragment using the provided parameters.
+         *
+         * @param param1 Parameter 1.
+         * @param param2 Parameter 2.
+         * @return A new instance of fragment ReportFragment.
+         */
+        // TODO: Rename and change types and number of parameters
+        @JvmStatic
+        fun newInstance(param1: String, param2: String) =
+            ReportFragment().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_PARAM1, param1)
+                    putString(ARG_PARAM2, param2)
+                }
+            }
+        const val REQUEST_CAMERA = 100
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null // Prevent memory leaks and crashes
     }
+
 }

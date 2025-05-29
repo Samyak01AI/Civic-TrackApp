@@ -1,0 +1,93 @@
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:backgroundTint="@color/surface_white"
+    app:cardElevation="@dimen/card_elevation"
+    android:layout_margin="@dimen/spacing_xs"
+    app:cardCornerRadius="@dimen/card_corner_radius">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/card_padding">
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/garbage_on_road"
+            style="@style/TextAppearance.CivicTrack.TitleLarge" />
+
+        <!-- Location -->
+        <TextView
+            android:id="@+id/tvLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/near_main_street"
+            style="@style/TextAppearance.CivicTrack.BodyMedium"
+            android:textColor="@color/neutral_600"
+            android:layout_marginTop="@dimen/spacing_xs" />
+
+        <!-- Status badge -->
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_md" />
+
+        <!-- Progress bar -->
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="6dp"
+            android:layout_marginTop="@dimen/spacing_md"
+            android:layout_marginBottom="12dp"
+            app:indicatorColor="@color/primary_blue"
+            app:trackColor="@color/neutral_200"
+            style="@style/Widget.Material3.LinearProgressIndicator" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <!-- Status radio buttons -->
+            <RadioGroup
+                android:id="@+id/radioStatusGroup"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/radioPending"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/pending"
+                    android:textColor="@color/neutral_800"
+                    android:buttonTint="@color/status_pending" />
+
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/radioInProgress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Processing"
+                    android:textColor="@color/neutral_800"
+                    android:buttonTint="@color/status_processing" />
+
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/radioResolved"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/resolved"
+                    android:textColor="@color/neutral_800"
+                    android:buttonTint="@color/status_approved" />
+            </RadioGroup>
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

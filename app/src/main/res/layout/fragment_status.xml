@@ -5,18 +5,21 @@
     android:id="@+id/swipeRefresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="10dp">
 
         <!-- Status Filter Chips -->
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chipGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_marginBottom="16dp"
             app:singleSelection="true">
 
             <com.google.android.material.chip.Chip
@@ -25,13 +28,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="All"
-                android:checked="true"/>
+                android:textSize="12sp"/>
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_pending"
                 style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="12sp"
                 android:text="Pending"/>
 
             <com.google.android.material.chip.Chip
@@ -39,6 +43,7 @@
                 style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="12sp"
                 android:text="In Progress"/>
 
             <com.google.android.material.chip.Chip
@@ -46,52 +51,79 @@
                 style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="12sp"
                 android:text="Resolved"/>
         </com.google.android.material.chip.ChipGroup>
-        <LinearLayout
+
+        <!-- Charts Section -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="8dp">
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="4dp"
+            android:padding="16dp">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Status Distribution"
-                android:textSize="14sp"
-                android:textStyle="bold"/>
+                android:orientation="vertical">
 
-            <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/pieChart"
-                android:layout_width="match_parent"
-                android:layout_height="220dp"
-                android:layout_marginTop="4dp"/>
+                <TextView
+                    style="@style/TextAppearance.CivicTrack.BodyMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Status Distribution"
+                    android:textAlignment="center"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginBottom="8dp"/>
 
-            <TextView
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/pieChart"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Daily Reports"
-                android:textSize="14sp"
-                android:textStyle="bold"/>
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="4dp"
+                android:padding="16dp">
 
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/barChart"
-                android:layout_width="match_parent"
-                android:layout_height="220dp"
-                android:layout_marginTop="4dp"/>
-        </LinearLayout>
-        <!-- Issues List -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+            <TextView
+            style="@style/TextAppearance.CivicTrack.BodyMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Daily Reports"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"/>
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/barChart"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"/>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvIssues"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:padding="8dp"/>
-
+            android:layout_height="match_parent"/>
         <include
+            android:visibility="gone"
             android:id="@+id/emptyState"
-            layout="@layout/layout_empty_status"
-            android:visibility="gone"/>
+            layout="@layout/layout_empty_status"/>
     </LinearLayout>
+</ScrollView>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

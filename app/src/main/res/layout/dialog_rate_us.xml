@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Theme.CivicTrack.Card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/surface_white"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/rate_us_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Rate CivicTrack"
+        style="@style/TextAppearance.CivicTrack.TitleLarge"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/rate_us_subtext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="We value your feedback. Please rate your experience."
+        style="@style/TextAppearance.CivicTrack.BodyMedium"
+        android:gravity="center"
+        android:layout_marginTop="8dp"/>
+
+    <RatingBar
+        android:id="@+id/ratingBar"
+        style="?android:attr/ratingBarStyleIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numStars="5"
+        android:stepSize="1"
+        android:isIndicator="false"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"/>
+
+</LinearLayout>

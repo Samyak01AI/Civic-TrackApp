@@ -20,7 +20,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -30,20 +29,19 @@ import com.cloudinary.android.callback.UploadCallback
 import com.example.civic_trackapplication.adapter.ProfileIssuesAdapter
 import com.example.civic_trackapplication.databinding.FragmentProfileBinding
 import com.example.civic_trackapplication.viewmodels.ProfileViewModel
-import com.example.civic_trackapplication.viewmodels.ReportViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.File
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
-import androidx.core.net.toUri
-import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
@@ -213,7 +211,7 @@ class ProfileFragment : Fragment() {
             val pref = requireContext().getSharedPreferences("user_pref", MODE_PRIVATE)
             binding.tvName.text = pref.getString("name", "No Name") ?: "No Name"
             binding.tvEmail.text = pref.getString("email", "No Email") ?: "No Email"
-            binding.tvJoinDate.text = "Member since ${userProfile.joinDate}"
+            binding.tvJoinDate.text = "Member since ${formatTimestampToMonthDate(userProfile.joinDate)}"
             val cloudinaryUrl = userProfile.imageUrl
 
             if (!cloudinaryUrl.isNullOrEmpty()) {
@@ -222,8 +220,6 @@ class ProfileFragment : Fragment() {
                     .circleCrop()
                     .placeholder(R.drawable.ic_user_placeholder)
                     .into(binding.ivProfile)
-            } else {
-                binding.ivProfile.setImageResource(R.drawable.ic_profile)
             }
         }
     }
@@ -333,7 +329,7 @@ class ProfileFragment : Fragment() {
         val outputStream = FileOutputStream(file)
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
         outputStream.close()
-        return FileProvider.getUriForFile(requireContext(), "${requireContext().packageName}.provider", file)
+        return FileProvider.getUriForFile(requireContext(), "${requireContext().packageName}.fileprovider", file)
     }
 
 
@@ -343,7 +339,7 @@ class ProfileFragment : Fragment() {
             user?.let {
                 binding.tvName.text = it.name
                 binding.tvEmail.text = it.email
-                binding.tvJoinDate.text = "Member since ${it.joinDate}"
+                binding.tvJoinDate.text = "Member since ${formatTimestampToMonthDate(it.joinDate)}"
                 val cloudinaryUrl = it.imageUrl
                 if (!cloudinaryUrl.isNullOrEmpty()) {
                     Glide.with(this)
@@ -386,7 +382,11 @@ class ProfileFragment : Fragment() {
             .setNegativeButton("Cancel", null)
             .show()
     }
-
+    fun formatTimestampToMonthDate(timestamp: Date?): String {
+        val date = timestamp ?: return ""
+        val sdf = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+        return sdf.format(date)
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

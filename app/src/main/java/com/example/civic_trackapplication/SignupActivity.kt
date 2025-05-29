@@ -21,6 +21,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -58,6 +59,9 @@ class SignupActivity : AppCompatActivity() {
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
+        binding.btnFacebook1.setOnClickListener {
+            binding.btnFacebook.performClick()
+        }
         binding.signupButton.setOnClickListener {
             val email = binding.emailInput.text.toString().trim()
             val password = binding.passwordInput.text.toString().trim()
@@ -70,10 +74,6 @@ class SignupActivity : AppCompatActivity() {
                     return@setOnClickListener
                 }
 
-                if (!binding.agreeCheck.isChecked) {
-                    Toast.makeText(this, "You must agree to the terms", Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
-                }
 
                 firebaseAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener { task ->
@@ -83,14 +83,10 @@ class SignupActivity : AppCompatActivity() {
                                 putString("name", name)
                                 putString("email", email)
                                 putString("password", password)
+                                putString("joinDate", Timestamp.now().toString())
                                 apply()
                             }
-                            val name = pref.getString("name", null)
-                            val email = pref.getString("email", null)
-                            val password = pref.getString("password", null)
-                            Log.d("SignupActivity", "name: $name")
-                            Log.d("SignupActivity", "email: $email")
-                            Log.d("SignupActivity", "password: $password")
+                        }
 
                             val user = firebaseAuth.currentUser
                             val profileUpdates = UserProfileChangeRequest.Builder()
@@ -102,48 +98,47 @@ class SignupActivity : AppCompatActivity() {
                                     if (updateTask.isSuccessful) {
                                         user.reload().addOnSuccessListener {
                                             val updatedName = user.displayName
-                                            val intent = Intent(this, LoginActivity::class.java)
                                             Toast.makeText(this, "Signup successful", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+                                }
+                            if (user != null) {
+                                val user1 = FirebaseAuth.getInstance().currentUser
+                                user1?.let {
+                                    val uid = user?.uid ?: "000"
+                                    val name = name ?: "No Name"
+                                    val email = email ?: "No Email"
+                                    val photoUrl = user?.photoUrl?.toString() ?: ""
+
+                                    val userData = hashMapOf(
+                                        "uid" to uid,
+                                        "name" to name,
+                                        "email" to email,
+                                        "photoUrl" to photoUrl,
+                                        "joinDate" to Timestamp.now() // optional
+                                    )
+
+                                    val db = FirebaseFirestore.getInstance()
+                                    db.collection("users").document(uid).set(userData)
+                                        .addOnSuccessListener {
+                                            Log.d("Firestore", "User data saved")
+                                        }
+                                        .addOnFailureListener { e ->
+                                            Log.e("Firestore", "Failed to save user: ${e.message}")
+                                        }
+                                    FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                                        if (task.isSuccessful) {
+                                            val token = task.result
+                                            FirebaseFirestore.getInstance()
+                                                .collection("users")
+                                                .document(uid)
+                                                .update("fcmToken", token)
+                                            val intent = Intent(this, LoginActivity::class.java)
                                             startActivity(intent)
                                             finish()
                                         }
                                     }
                                 }
-                            val user1 = FirebaseAuth.getInstance().currentUser
-
-                            user1?.let {
-                                val uid = user?.uid ?: "000"
-                                val name = user?.displayName ?: "No Name"
-                                val email = user?.email ?: "No Email"
-                                val photoUrl = user?.photoUrl?.toString() ?: ""
-
-                                val userData = hashMapOf(
-                                    "uid" to uid,
-                                    "name" to name,
-                                    "email" to email,
-                                    "photoUrl" to photoUrl,
-                                    "joinDate" to System.currentTimeMillis() // optional
-                                )
-
-                                val db = FirebaseFirestore.getInstance()
-                            db.collection("users").document(uid).set(userData)
-                                .addOnSuccessListener {
-                                    Log.d("Firestore", "User data saved")
-                                }
-                                .addOnFailureListener { e ->
-                                    Log.e("Firestore", "Failed to save user: ${e.message}")
-                                }
-                                FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
-                                    if (task.isSuccessful) {
-                                        val token = task.result
-                                        FirebaseFirestore.getInstance()
-                                            .collection("users")
-                                            .document(uid)
-                                            .update("fcmToken", token)
-                                    }
-                                }
-                                }
-
                         } else {
                             Toast.makeText(this, "Signup failed: ${task.exception?.message}",
                                 Toast.LENGTH_SHORT).show()
@@ -218,6 +213,7 @@ class SignupActivity : AppCompatActivity() {
                             putString("uid", it.uid)
                             putString("user_photo", it.photoUrl?.toString())
                             putBoolean("isLoggedIn", true)
+                            putString("joinDate", Timestamp.now().toString())
                             apply()
                         }
                     }
@@ -232,7 +228,7 @@ class SignupActivity : AppCompatActivity() {
                             "name" to name,
                             "email" to email,
                             "photoUrl" to photoUrl,
-                            "joinDate" to System.currentTimeMillis() // optional
+                            "joinDate" to Timestamp.now() // optional
                         )
 
                         val db = FirebaseFirestore.getInstance()
@@ -280,7 +276,7 @@ class SignupActivity : AppCompatActivity() {
                             "name" to name,
                             "email" to email,
                             "photoUrl" to photoUrl,
-                            "joinDate" to System.currentTimeMillis() // optional
+                            "joinDate" to Timestamp.now() // optional
                         )
 
                         val db = FirebaseFirestore.getInstance()
@@ -300,6 +296,16 @@ class SignupActivity : AppCompatActivity() {
                                     .update("fcmToken", token)
                             }
                         }
+                    }
+                    val pref = getSharedPreferences("user_pref", MODE_PRIVATE)
+                    pref.edit().apply {
+                        putString("name", user?.displayName)
+                        putString("email", user?.email)
+                        putString("uid", user?.uid)
+                        putString("user_photo", user?.photoUrl?.toString())
+                        putBoolean("isLoggedIn", true)
+                        putString("joinDate",Timestamp.now().toString())
+                        apply()
                     }
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)

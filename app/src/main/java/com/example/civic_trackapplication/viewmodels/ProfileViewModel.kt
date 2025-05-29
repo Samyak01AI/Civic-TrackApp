@@ -1,6 +1,5 @@
 package com.example.civic_trackapplication.viewmodels
 
-import android.preference.PreferenceManager
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,7 +9,9 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 class ProfileViewModel : ViewModel() {
     private val auth = FirebaseAuth.getInstance()
@@ -40,7 +41,7 @@ class ProfileViewModel : ViewModel() {
                             name = it.getString("name") ?: "Anonymous",
                             email = auth.currentUser?.email ?: "",
                             imageUrl = it.getString("imageUrl") ?: "",
-                            joinDate = (it.get("joinDate") as? Timestamp)?.toDate() ?: Date()
+                            joinDate = it.getTimestamp("joinDate")?.toDate()
                         )
                     }
                 }
@@ -66,11 +67,15 @@ class ProfileViewModel : ViewModel() {
         FirebaseFirestore.getInstance().collection("Issues")
             .whereEqualTo("userId", uid)
             .addSnapshotListener { snapshot, e ->
-                if (e != null || snapshot == null) return@addSnapshotListener
-                val issues = snapshot.documents.mapNotNull {
-                    it.toObject(Issue::class.java)?.copy(id = it.id)
+                if (e != null || snapshot == null){
+                    _userIssues.postValue(emptyList())
                 }
-                _userIssues.postValue(issues)
+                else {
+                    val issues = snapshot.documents.mapNotNull {
+                        Issue.fromDocument(it)
+                    }
+                    _userIssues.postValue(issues)
+                }
             }
     }
 
@@ -91,10 +96,11 @@ class ProfileViewModel : ViewModel() {
 
     }
 
+
     data class UserProfile(
         val name: String,
         val email: String,
         val imageUrl: String,
-        val joinDate: Date
+        val joinDate: Date? = Date(),
     )
 }

@@ -4,12 +4,16 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.civic_trackapplication.Issue
+import com.example.civic_trackapplication.repository.IssuesRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import kotlinx.coroutines.launch
 
 class IssuesViewModel : ViewModel() {
     private val firestore = FirebaseFirestore.getInstance()
+    private val repository = IssuesRepository()
     private val issuesCollection = firestore.collection("Issues")
 
     private val _issues = MutableLiveData<List<Issue>>()
@@ -30,7 +34,7 @@ class IssuesViewModel : ViewModel() {
         _isLoading.value = true
 
         issuesCollection
-            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .orderBy("priority_score", Query.Direction.DESCENDING)
             .addSnapshotListener { snapshot, error ->
                 _isLoading.value = false
 
@@ -43,7 +47,15 @@ class IssuesViewModel : ViewModel() {
                     Issue.fromDocument(doc)
                 } ?: emptyList()
 
-                _issues.value = issuesList
+                _issues.value = issuesList as List<Issue>?
             }
+    }
+    fun updateIssueStatus(issueId: String, newStatus: String) {
+        viewModelScope.launch {
+            val success = repository.updateIssueStatus(issueId, newStatus)
+            if (!success) {
+                // Handle error if needed
+            }
+        }
     }
 }

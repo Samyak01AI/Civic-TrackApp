@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -20,17 +20,10 @@
     <application
         android:name=".CloudinaryInit"
         android:label="CivicTrack"
-        android:theme="@style/Theme.CivicTrackApplication">
-        <activity
-            android:name=".AdminActivity"
-            android:exported="false" />
-        <activity
-            android:name=".IssueDetailActivity"
-            android:exported="false" />
-
+        android:theme="@style/Theme.CivicTrack" >
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.provider"
+            android:authorities="com.example.civic_trackapplication.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -38,6 +31,20 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+        <service
+            android:name=".MyFirebaseMessagingService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name=".AdminActivity"
+            android:exported="false" />
+        <activity
+            android:name=".IssueDetailActivity"
+            android:exported="false" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -54,28 +61,39 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".WelcomeActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.CivicTrack.NoActionBar" />
         <activity
             android:name=".SplashActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.CivicTrack.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="FLUTTER_NOTIFICATION_CLICK" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".SignupActivity" />
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/Theme.CivicTrack.NoActionBar" />
+        <activity
+            android:name=".SignupActivity"
+            android:theme="@style/Theme.CivicTrack.NoActionBar" />
         <activity android:name=".HomeActivity" /> <!-- Core Features -->
         <activity android:name=".ViewIssuesActivity" />
         <activity android:name=".ReportIssueActivity" />
         <activity android:name=".MyAccountActivity" />
         <activity android:name=".MyReportsActivity" />
         <activity android:name=".NotificationsActivity" />
-        <activity android:name=".HelpSupportActivity" />
         <activity android:name=".ProfileActivity" />
     </application>
 
