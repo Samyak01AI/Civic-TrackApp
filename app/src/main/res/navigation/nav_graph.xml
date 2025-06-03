@@ -39,15 +39,16 @@
         android:id="@+id/issueDetailFragment"
         android:name="com.example.civic_trackapplication.IssueDetailFragment"
         android:label="Issue Details">
-        <argument
-            android:name="issueId"
-            app:argType="string" />
     </fragment>
 
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.civic_trackapplication.ProfileFragment"
-        android:label="Profile" />
+        android:label="Profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_issueDetailFragment"
+            app:destination="@id/issueDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/helpSupportFragment"
         android:name="com.example.civic_trackapplication.HelpSupportFragment"
@@ -60,4 +61,17 @@
         android:id="@+id/contactUsFragment"
         android:name="com.example.civic_trackapplication.ContactUsFragment"
         android:label="Login" />
+
+    <fragment
+        android:id="@+id/adminFragment"
+        android:name="com.example.civic_trackapplication.AdminFragment"
+        android:label="AdminFragment">
+
+        <action
+            android:id="@+id/action_adminFragment_to_issueDetailFragment"
+            app:destination="@id/issueDetailFragment"
+            app:enterAnim="@anim/slides_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+
+    </fragment>
 </navigation>

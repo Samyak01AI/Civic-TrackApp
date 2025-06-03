@@ -55,7 +55,7 @@
             android:contentDescription="Open Chatbot"
             android:src="@drawable/chatbot"
             android:scaleType="centerCrop"
-            app:backgroundTint="#2562E9"
+            app:backgroundTint="@color/primary"
             app:tint="@android:color/white"
             app:elevation="@dimen/elevation_medium" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

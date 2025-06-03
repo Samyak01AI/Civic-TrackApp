@@ -1,9 +1,11 @@
 package com.example.civic_trackapplication
 
+import NetworkMonitor
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
@@ -15,11 +17,14 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -27,9 +32,11 @@ import com.cloudinary.android.MediaManager
 import com.cloudinary.android.callback.ErrorInfo
 import com.cloudinary.android.callback.UploadCallback
 import com.example.civic_trackapplication.adapter.ProfileIssuesAdapter
+import com.example.civic_trackapplication.adapter.StatusIssuesAdapter
 import com.example.civic_trackapplication.databinding.FragmentProfileBinding
 import com.example.civic_trackapplication.viewmodels.ProfileViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import java.io.File
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -49,6 +56,7 @@ class ProfileFragment : Fragment() {
     private val viewModel: ProfileViewModel by viewModels()
     var imageUrl = ""
     private lateinit var issuesAdapter: ProfileIssuesAdapter
+    private lateinit var networkMonitor: NetworkMonitor
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,9 +72,22 @@ class ProfileFragment : Fragment() {
 
         setupRecyclerView()
         setupClickListeners()
+
+        val isDarkModeEnabled = when (
+            resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        ) {
+            Configuration.UI_MODE_NIGHT_YES -> true
+            Configuration.UI_MODE_NIGHT_NO -> false
+            else -> false
+        }
+
+        binding.switchDarkMode.isChecked = isDarkModeEnabled
+        binding.switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.setDarkModeEnabled(isChecked)
+        }
+
         observeData()
 
-        // Load profile image from Firestore or SharedPreferences on every view creation
         loadProfileImage()
     }
 
@@ -103,9 +124,11 @@ class ProfileFragment : Fragment() {
 
 
     private fun setupRecyclerView() {
-        issuesAdapter = ProfileIssuesAdapter { issue ->
-            navigateToIssueDetail(issue.id)
-        }
+        issuesAdapter = ProfileIssuesAdapter(
+            onItemClick = { issue ->
+                showIssueDetailsDialog(issue)
+            }
+        )
 
         binding.rvIssues.apply {
             adapter = issuesAdapter
@@ -122,19 +145,9 @@ class ProfileFragment : Fragment() {
             showEditDialog()
         }
 
-        binding.switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.setDarkModeEnabled(isChecked)
-        }
-
         binding.btnLogout.setOnClickListener {
             showLogoutConfirmation()
         }
-    }
-    private fun navigateToIssueDetail(issueId: String) {
-        val intent = Intent(requireContext(), IssueDetailActivity::class.java).apply {
-            putExtra("ISSUE_ID", issueId)
-        }
-        startActivity(intent)
     }
 
 
@@ -382,10 +395,58 @@ class ProfileFragment : Fragment() {
             .setNegativeButton("Cancel", null)
             .show()
     }
+
+    private fun showIssueDetailsDialog(issue: Issue) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_issue_details, null)
+
+        dialogView.findViewById<TextView>(R.id.tvTitle).text = issue.title
+        dialogView.findViewById<TextView>(R.id.tvLocation).text = issue.location
+        dialogView.findViewById<TextView>(R.id.tvDescription).text = issue.description
+        dialogView.findViewById<TextView>(R.id.tvStatus).text = issue.status
+        Glide.with(this)
+            .load(issue.imageUrl)
+            .into(dialogView.findViewById<ImageView>(R.id.ivIssueImage))
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Issue Details")
+            .setView(dialogView)
+            .setPositiveButton("OK", null)
+            .show()
+    }
+
     fun formatTimestampToMonthDate(timestamp: Date?): String {
         val date = timestamp ?: return ""
         val sdf = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
         return sdf.format(date)
+    }
+
+
+    override fun onStart() {
+        super.onStart()
+        networkMonitor = NetworkMonitor(requireContext())
+        networkMonitor.isConnected.observe(this) { isConnected ->
+            if (!isConnected) {
+                Toast.makeText(requireContext(), "Please check internet connection", Toast.LENGTH_SHORT).show()
+            }
+        }
+        networkMonitor.startMonitoring()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        networkMonitor.stopMonitoring()
+    }
+    override fun onResume() {
+        super.onResume()
+        val isDarkModeEnabled = when (
+            resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        ) {
+            Configuration.UI_MODE_NIGHT_YES -> true
+            Configuration.UI_MODE_NIGHT_NO -> false
+            else -> false
+        }
+        Log.d("ProfileFragment", "isDarkModeEnabled: $isDarkModeEnabled")
+        binding.switchDarkMode.isChecked = isDarkModeEnabled
     }
     override fun onDestroyView() {
         super.onDestroyView()

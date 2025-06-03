@@ -15,7 +15,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.RatingBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresPermission
@@ -37,7 +39,10 @@ import java.util.Locale
 import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.bumptech.glide.Glide
+import com.example.civic_trackapplication.adapter.AdminIssuesAdapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
@@ -94,10 +99,11 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        issuesAdapter = IssuesAdapter { issue ->
-            // Handle item click
-            navigateToIssueDetail(issue.id)
-        }
+        issuesAdapter = IssuesAdapter(
+            onItemClick = { issue ->
+                showIssueDetailsDialog(issue)
+            }
+        )
         binding.rvIssues.apply {
             adapter = issuesAdapter
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
@@ -232,6 +238,24 @@ class HomeFragment : Fragment() {
         getCurrentLocation()
     }
 
+    private fun showIssueDetailsDialog(issue: Issue) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_issue_details, null)
+
+        dialogView.findViewById<TextView>(R.id.tvTitle).text = issue.title
+        dialogView.findViewById<TextView>(R.id.tvLocation).text = issue.location
+        dialogView.findViewById<TextView>(R.id.tvDescription).text = issue.description
+        dialogView.findViewById<TextView>(R.id.tvStatus).text = issue.status
+        Glide.with(this)
+            .load(issue.imageUrl)
+            .into(dialogView.findViewById<ImageView>(R.id.ivIssueImage))
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Issue Details")
+            .setView(dialogView)
+            .setPositiveButton("OK", null)
+            .show()
+    }
+
     private fun showEmptyState() {
         binding.rvIssues.visibility = View.GONE
     }
@@ -265,11 +289,7 @@ class HomeFragment : Fragment() {
     }
 
 
-    private fun navigateToIssueDetail(issueId: String) {
-        // Safe navigation with Navigation Component
-        val directions = HomeFragmentDirections.actionHomeFragmentToIssueDetailFragment(issueId)
-        findNavController().navigate(directions)
-    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

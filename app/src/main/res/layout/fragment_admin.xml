@@ -19,12 +19,12 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:strokeColor="@color/colorPrimary"
+            app:cardBackgroundColor="@color/card_background"
             app:cardElevation="@dimen/card_elevation"
             app:cardCornerRadius="@dimen/card_corner_radius"
             android:layout_margin="@dimen/screen_padding_small"
-            app:strokeWidth="1dp"
-            app:strokeColor="@color/primary_blue"
-            app:cardBackgroundColor="@color/primary_blue_50">
+            app:strokeWidth="1dp">
 
             <LinearLayout
                 android:layout_width="match_parent"

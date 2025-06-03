@@ -2,6 +2,7 @@ package com.example.civic_trackapplication
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.civic_trackapplication.databinding.FragmentAdminStatsBinding
 import com.example.civic_trackapplication.viewmodels.AdminStatsViewModel
 import com.github.mikephil.charting.animation.Easing
@@ -20,7 +22,11 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.google.android.material.snackbar.Snackbar
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class AdminStatsFragment : Fragment() {
     private var _binding: FragmentAdminStatsBinding? = null
@@ -39,6 +45,10 @@ class AdminStatsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.swipeRefresh.setOnRefreshListener {
+            loadData()
+            binding.swipeRefresh.isRefreshing = false
+        }
         setupPieChart()
         setupBarChart()
         setupBarChart()
@@ -72,8 +82,9 @@ class AdminStatsFragment : Fragment() {
 
         // Customize pie chart appearance
         binding.pieChart.isDrawHoleEnabled = true
-        binding.pieChart.holeRadius = 40f
+        binding.pieChart.holeRadius = 35f
         binding.pieChart.setEntryLabelColor(Color.BLACK)
+        binding.pieChart.layoutParams.height = 950
         binding.pieChart.setEntryLabelTextSize(12f)
 
         // Disable description text
@@ -119,6 +130,7 @@ class AdminStatsFragment : Fragment() {
 
         binding.barChart.description = Description().apply { text = "" }
         binding.barChart.legend.isEnabled = true
+        binding.barChart.layoutParams.height = 1000
 
         binding.barChart.animateY(1000)
         binding.barChart.invalidate()
@@ -127,11 +139,85 @@ class AdminStatsFragment : Fragment() {
     private fun setupObservers() {
         viewModel.statsData.observe(viewLifecycleOwner) { stats ->
             stats?.let {
-                updatePieChart(it.statusDistribution)
-                updateBarChart(it.weeklyTrends)
+                observeChartData()
                 binding.progressBar.visibility = View.GONE
                 binding.statsContainer.visibility = View.VISIBLE
             }
+        }
+    }
+
+    private fun observeChartData() {
+        viewModel.issuesForCharts.observe(viewLifecycleOwner) { issues ->
+            updatePieChart(issues)
+            updateBarChart(issues)
+        }
+    }
+
+    private fun updatePieChart(issues: List<Issue>) {
+        // Debug: Print all received issues
+        Log.d("ChartDebug", "Received ${issues.size} issues")
+        issues.forEach { issue ->
+            Log.d("ChartDebug", "Issue ID: ${issue.id}, Status: ${issue.status}")
+        }
+
+        // Group and count statuses (case-insensitive)
+        val statusCount = issues
+            .filter { !it.status.isNullOrEmpty() }
+            .groupingBy { it.status!!.lowercase().trim() }
+            .eachCount()
+
+        Log.d("ChartDebug", "Status counts: $statusCount")
+
+        val entries = listOf(
+            PieEntry(statusCount["pending"]?.toFloat() ?: 0f, "Pending"),
+            PieEntry(statusCount["in progress"]?.toFloat() ?: 0f, "In Progress"),
+            PieEntry(statusCount["resolved"]?.toFloat() ?: 0f, "Resolved")
+        ).filter { it.value > 0f }
+
+        if (entries.isEmpty()) {
+            Log.w("ChartDebug", "No valid data to display in pie chart")
+            binding.pieChart.clear()
+            binding.pieChart.invalidate()
+            return
+        }
+
+        Log.d("ChartDebug", "Chart entries: $entries")
+
+        val dataSet = PieDataSet(entries, "").apply {
+            colors = listOf(
+                ContextCompat.getColor(requireContext(), R.color.status_pending),
+                ContextCompat.getColor(requireContext(), R.color.status_processing),
+                ContextCompat.getColor(requireContext(), R.color.status_approved)
+            )
+            valueTextSize = 14f
+            valueTextColor = Color.BLACK
+        }
+
+        binding.pieChart.data = PieData(dataSet)
+        binding.pieChart.invalidate()
+        binding.pieChart.animateY(1000)
+    }
+
+    private fun updateBarChart(issues: List<Issue>) {
+        val dailyCount = issues.groupBy {
+            SimpleDateFormat("dd MMM", Locale.getDefault()).format(it.timestamp)
+        }.mapValues { it.value.size }
+
+        val entries = dailyCount.entries.mapIndexed { index, entry ->
+            BarEntry(index.toFloat(), entry.value.toFloat())
+        }
+
+        val xAxisLabels = dailyCount.keys.toList()
+
+        val dataSet = BarDataSet(entries, "Issues per Day").apply {
+            color = ContextCompat.getColor(requireContext(), R.color.status_processing)
+            valueTextSize = 10f
+        }
+
+        binding.barChart.apply {
+            data = BarData(dataSet)
+            xAxis.valueFormatter = IndexAxisValueFormatter(xAxisLabels)
+            invalidate()
         }
     }
 
@@ -145,9 +231,9 @@ class AdminStatsFragment : Fragment() {
         val entries = statusData.map { PieEntry(it.value.toFloat(), it.key) }
         val dataSet = PieDataSet(entries, "").apply {
             colors = listOf(
+                ContextCompat.getColor(requireContext(), R.color.status_pending),
                 ContextCompat.getColor(requireContext(), R.color.status_approved),
                 ContextCompat.getColor(requireContext(), R.color.status_processing),
-                ContextCompat.getColor(requireContext(), R.color.status_pending)
             )
             valueTextSize = 12f
             valueTextColor = Color.WHITE

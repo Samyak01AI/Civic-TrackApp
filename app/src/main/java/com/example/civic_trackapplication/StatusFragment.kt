@@ -7,7 +7,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.os.postDelayed
 import androidx.fragment.app.Fragment
@@ -16,6 +19,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
+import com.bumptech.glide.Glide
+import com.example.civic_trackapplication.adapter.IssuesAdapter
 import com.example.civic_trackapplication.adapter.StatusIssuesAdapter
 import com.example.civic_trackapplication.databinding.FragmentStatusBinding
 import com.example.civic_trackapplication.viewmodels.StatusViewModel
@@ -31,6 +36,7 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.google.android.material.chip.Chip
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -72,13 +78,14 @@ class StatusFragment : Fragment() {
                 filterIssuesByCategory(status)
             }
         }
-
     }
 
     private fun setupRecyclerView() {
-        issuesAdapter = StatusIssuesAdapter { issue ->
-            navigateToIssueDetail(issue.id)
-        }
+        issuesAdapter = StatusIssuesAdapter(
+            onItemClick = { issue ->
+                showIssueDetailsDialog(issue)
+            }
+        )
 
         binding.rvIssues.apply {
             adapter = issuesAdapter
@@ -91,8 +98,11 @@ class StatusFragment : Fragment() {
             setUsePercentValues(true)
             description.isEnabled = false
             legend.isEnabled = true
+            layoutParams.width = 1000
+            layoutParams.height = 1000
+            isRotationEnabled = false
             setEntryLabelColor(Color.BLACK)
-            setEntryLabelTextSize(12f)
+            setEntryLabelTextSize(9f)
             animateY(1000, Easing.EaseInOutQuad)
 
             setDrawEntryLabels(true)
@@ -164,28 +174,6 @@ class StatusFragment : Fragment() {
         binding.pieChart.animateY(1000)
     }
 
-    private fun testPieChart() {
-        val testEntries = listOf(
-            PieEntry(25f, "Pending"),
-            PieEntry(35f, "In Progress"),
-            PieEntry(40f, "Resolved")
-        )
-
-        val dataSet = PieDataSet(testEntries, "").apply {
-            colors = listOf(
-                ContextCompat.getColor(requireContext(), R.color.status_pending),
-                ContextCompat.getColor(requireContext(), R.color.status_processing),
-                ContextCompat.getColor(requireContext(), R.color.status_approved)
-            )
-            valueTextSize = 14f
-            valueTextColor = Color.BLACK
-        }
-
-        pieChart.data = PieData(dataSet)
-        pieChart.invalidate()
-        pieChart.animateY(1000)
-    }
-
     private fun updateBarChart(issues: List<Issue>) {
         val dailyCount = issues.groupBy {
             SimpleDateFormat("dd MMM", Locale.getDefault()).format(it.timestamp)
@@ -252,12 +240,26 @@ class StatusFragment : Fragment() {
                 Toast.makeText(requireContext(), "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
             }
     }
+    private fun showIssueDetailsDialog(issue: Issue) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_issue_details, null)
 
-    private fun navigateToIssueDetail(issueId: String) {
-        findNavController().navigate(
-            StatusFragmentDirections.actionStatusFragmentToIssueDetailFragment(issueId)
-        )
+        dialogView.findViewById<TextView>(R.id.tvTitle).text = issue.title
+        dialogView.findViewById<TextView>(R.id.tvLocation).text = issue.location
+        dialogView.findViewById<TextView>(R.id.tvDescription).text = issue.description
+        dialogView.findViewById<TextView>(R.id.tvStatus).text = issue.status
+        Glide.with(this)
+            .load(issue.imageUrl)
+            .into(dialogView.findViewById<ImageView>(R.id.ivIssueImage))
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Issue Details")
+            .setView(dialogView)
+            .setPositiveButton("OK", null)
+            .show()
     }
+
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()

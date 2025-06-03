@@ -18,6 +18,7 @@ import com.example.civic_trackapplication.viewmodels.AdminUsersViewModel
 import com.example.civic_trackapplication.viewmodels.ProfileViewModel
 import com.example.civic_trackapplication.viewmodels.Resource
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import kotlin.getValue
 
 class AdminUsersFragment : Fragment() {
@@ -38,6 +39,7 @@ class AdminUsersFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         (activity as AppCompatActivity).supportActionBar?.title = "Manage Users"
         adapter = AdminUsersAdapter { userId, isAdmin ->
             viewModel.updateAdminStatus(userId, isAdmin)

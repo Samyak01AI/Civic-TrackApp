@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.civic_trackapplication.Issue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
@@ -24,6 +25,52 @@ class AdminStatsViewModel : ViewModel() {
     private val _headerStats = MutableLiveData<HeaderStats>()
     val headerStats: LiveData<HeaderStats> = _headerStats
 
+    private val _issuesForCharts = MutableLiveData<List<Issue>>()
+    val issuesForCharts: LiveData<List<Issue>> = _issuesForCharts
+    private val _filteredIssues = MutableLiveData<List<Issue>>()
+    val filteredIssues: LiveData<List<Issue>> = _filteredIssues
+
+
+    private val currentFilter = MutableLiveData(StatusFilter.ALL)
+
+    init {
+        currentFilter.observeForever { filter ->
+            loadIssues(filter)
+        }
+    }
+
+    fun setFilter(filter: StatusFilter) {
+        currentFilter.value = filter
+    }
+
+    fun refreshIssues() {
+        currentFilter.value?.let { loadIssues(it) }
+    }
+
+
+    private fun loadIssues(filter: StatusFilter) {
+        _isLoading.value = true
+
+        var query = firestore.collection("Issues")
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+
+        if (filter != StatusFilter.ALL) {
+            query = query.whereEqualTo("status", filter.name.lowercase())
+        }
+
+        query.addSnapshotListener { snapshot, error ->
+            _isLoading.value = false
+            if (error != null) return@addSnapshotListener
+
+            val issues = snapshot?.documents?.mapNotNull { doc ->
+                Issue.fromDocument(doc)
+            } ?: emptyList()
+
+            _filteredIssues.value = issues
+            _issuesForCharts.value = issues.takeLast(30) // Last 30 for charts
+        }
+    }
+    enum class StatusFilter { ALL, PENDING, IN_PROGRESS, RESOLVED }
     init {
         _isLoading.value = true
         loadAllStats()

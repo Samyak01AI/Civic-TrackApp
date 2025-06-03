@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.google.gms.google.services)
     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
     id("androidx.navigation.safeargs.kotlin")
+    id ("kotlin-parcelize")
 }
 android {
     namespace = "com.example.civic_trackapplication"

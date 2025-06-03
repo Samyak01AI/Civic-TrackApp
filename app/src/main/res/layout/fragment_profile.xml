@@ -128,7 +128,7 @@
                         android:textSize="18sp"
                         android:text="@string/dark_mode" />
 
-                    <com.google.android.material.switchmaterial.SwitchMaterial
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/switchDarkMode"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />

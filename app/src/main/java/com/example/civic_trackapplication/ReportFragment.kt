@@ -139,6 +139,7 @@ class ReportFragment : Fragment() {
                     category.toString(),
                     imageUri
                 )
+                Toast.makeText(requireContext(), "Processing...", Toast.LENGTH_SHORT).show()
             }
         }
 

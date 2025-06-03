@@ -12,7 +12,7 @@ import com.example.civic_trackapplication.R
 import com.example.civic_trackapplication.databinding.ItemProfileIssueBinding
 
 class ProfileIssuesAdapter(
-    private val onItemClick: (Issue) -> Unit
+    private val onItemClick: (issue: Issue) -> Unit
 ) : ListAdapter<Issue, ProfileIssueViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProfileIssueViewHolder {
