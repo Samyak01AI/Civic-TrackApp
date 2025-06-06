@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark theme overrides -->
+    <color name="background_primary">#0F172A</color>
+    <color name="background_secondary">#1E293B</color>
+    <color name="background_tertiary">#334155</color>
+    <color name="blue">#FFFFFF</color>
+
+
+    <color name="surface_white">#1E293B</color>
+    <color name="surface_light_gray">#334155</color>
+    <color name="card_background">#1E293B</color>
+    <color name="card_border">#475569</color>
+
+    <color name="text_primary">#F8FAFC</color>
+    <color name="text_secondary">#CBD5E1</color>
+    <color name="text_tertiary">#94A3B8</color>
+
+    <color name="divider_light">#475569</color>
+    <color name="divider_medium">#64748B</color>
+    <color name="border_light">#475569</color>
+    <color name="border_medium">#64748B</color>
+</resources>

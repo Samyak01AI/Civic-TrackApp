@@ -11,13 +11,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import androidx.core.graphics.toColorInt
 
-class IssueAdapter(var issueList: List<Issue>) : RecyclerView.Adapter<IssueAdapter.IssueViewHolder>() {
+class IssueAdapter(private var issues: List<Issue>) :
+    RecyclerView.Adapter<IssueAdapter.IssueViewHolder>() {
+
     private val colors = listOf("#FFE0B2", "#C8E6C9", "#FFCDD2", "#D1C4E9", "#BBDEFB")
-    class IssueViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tvTitle: TextView = itemView.findViewById(R.id.tvTitle)
-        val tvLocation: TextView = itemView.findViewById(R.id.tvLocation)
-        val tvStatus: TextView = itemView.findViewById(R.id.tvStatus)
-        val imageView: ImageView = itemView.findViewById(R.id.imgIssue)
+
+    inner class IssueViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val img: ImageView = itemView.findViewById(R.id.imgIssue)
+        val title: TextView = itemView.findViewById(R.id.tvTitle)
+        val location: TextView = itemView.findViewById(R.id.tvLocation)
+        val status: TextView = itemView.findViewById(R.id.tvStatus)
         val card: CardView = itemView.findViewById(R.id.cardRoot)
     }
 
@@ -27,30 +30,31 @@ class IssueAdapter(var issueList: List<Issue>) : RecyclerView.Adapter<IssueAdapt
     }
 
     override fun onBindViewHolder(holder: IssueViewHolder, position: Int) {
-        val issue = issueList[position]
-        holder.tvTitle.text = issue.title
-        val latitude = issue.location["latitude"]
+        val issue = issues[position]
+        holder.title.text = issue.title
+     /*   val latitude = issue.location["latitude"]
         val longitude = issue.location["longitude"]
 
-        holder.tvLocation.text = if (latitude != null && longitude != null) {
+        holder.location.text = if (latitude != null && longitude != null) {
             "Lat: $latitude, Lng: $longitude"
         } else {
             "No location"
-        }
-        holder.tvStatus.text = issue.category
-        holder.imageView.setImageResource(R.drawable.ic_report)
+        }*/
+        holder.status.text = issue.status
+        holder.img.setImageResource(R.drawable.ic_report)
         val color = colors[position % colors.size].toColorInt()
         holder.card.setCardBackgroundColor(color)
 
-        Glide.with(holder.itemView.context).load(issue.imageUrl).into(holder.imageView)
+        Glide.with(holder.itemView.context).load(issue.imageUrl).into(holder.img)
     }
 
+    override fun getItemCount(): Int = issues.size
 
-
-    override fun getItemCount(): Int = issueList.size
-
-    fun updateData(newList: List<Issue>) {
-        issueList = newList
+/*    fun filterByCategory(category: String) {
+        issues = if (category == "All") originalList else originalList.filter { it.category == category }
         notifyDataSetChanged()
-    }
+    }*/
+
+    private var originalList: List<Issue> = issues
+
 }

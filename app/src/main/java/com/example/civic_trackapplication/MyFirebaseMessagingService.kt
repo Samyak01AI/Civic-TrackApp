@@ -1,43 +1,36 @@
 package com.example.civic_trackapplication
 
-import android.R
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.Context
 import android.os.Build
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
-
 class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        super.onMessageReceived(remoteMessage)
+        val title = remoteMessage.notification?.title ?: "New Notification"
+        val body = remoteMessage.notification?.body ?: ""
+        Log.d("FCM", "Received message: $title - $body")
 
-        val title = if (remoteMessage.getNotification() != null) remoteMessage.getNotification()!!
-            .getTitle() else "No Title"
-        val body = if (remoteMessage.getNotification() != null) remoteMessage.getNotification()!!
-            .getBody() else "No Body"
-
-        sendNotification(title, body)
-    }
-
-    private fun sendNotification(title: String?, message: String?) {
-        val builder: NotificationCompat.Builder = NotificationCompat.Builder(this, "default")
-            .setSmallIcon(R.drawable.ic_notification_overlay)
+        val builder = NotificationCompat.Builder(this, "default_channel")
+            .setSmallIcon(R.drawable.splash)
             .setContentTitle(title)
-            .setContentText(message)
+            .setContentText(body)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
 
-        val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                "default", "Default Channel",
-                NotificationManager.IMPORTANCE_HIGH
-            )
-            manager.createNotificationChannel(channel)
+            val channel = NotificationChannel("default_channel", "Default", NotificationManager.IMPORTANCE_HIGH)
+            notificationManager.createNotificationChannel(channel)
         }
+        notificationManager.notify(0, builder.build())
+    }
 
-        manager.notify(0, builder.build())
+
+    override fun onNewToken(token: String) {
+        super.onNewToken(token)
     }
 }
-

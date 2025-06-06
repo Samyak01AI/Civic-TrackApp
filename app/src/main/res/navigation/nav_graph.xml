@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.civic_trackapplication.HomeFragment"
+        android:label="Home" >
+        <action
+            android:id="@+id/action_homeFragment_to_issueDetailFragment"
+            app:destination="@id/issueDetailFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_helpSupportFragment"
+            app:destination="@id/helpSupportFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_aboutUsFragment"
+            app:destination="@id/aboutUsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_contactUsFragment"
+            app:destination="@id/contactUsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/reportFragment"
+        android:name="com.example.civic_trackapplication.ReportFragment"
+        android:label="Report" />
+
+    <fragment
+        android:id="@+id/statusFragment"
+        android:name="com.example.civic_trackapplication.StatusFragment"
+        android:label="Progress" >
+        <action
+        android:id="@+id/action_statusFragment_to_issueDetailFragment"
+        app:destination="@id/issueDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/issueDetailFragment"
+        android:name="com.example.civic_trackapplication.IssueDetailFragment"
+        android:label="Issue Details">
+    </fragment>
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.civic_trackapplication.ProfileFragment"
+        android:label="Profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_issueDetailFragment"
+            app:destination="@id/issueDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/helpSupportFragment"
+        android:name="com.example.civic_trackapplication.HelpSupportFragment"
+        android:label="Help &amp; Support" />
+    <fragment
+        android:id="@+id/aboutUsFragment"
+        android:name="com.example.civic_trackapplication.AboutUsFragment"
+        android:label="About Us" />
+    <fragment
+        android:id="@+id/contactUsFragment"
+        android:name="com.example.civic_trackapplication.ContactUsFragment"
+        android:label="Login" />
+
+    <fragment
+        android:id="@+id/adminFragment"
+        android:name="com.example.civic_trackapplication.AdminFragment"
+        android:label="AdminFragment">
+
+        <action
+            android:id="@+id/action_adminFragment_to_issueDetailFragment"
+            app:destination="@id/issueDetailFragment"
+            app:enterAnim="@anim/slides_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+
+    </fragment>
+</navigation>

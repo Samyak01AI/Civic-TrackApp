@@ -8,17 +8,16 @@
     android:background="#F7F9FB">
 
     <Button
+        style="@style/Widget.Material3.Button"
         android:id="@+id/btnCapture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Capture Image"
-        android:backgroundTint="#5D5FEF"
         android:textColor="#FFFFFF" />
 
     <ImageView
         android:id="@+id/imagePreview"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_marginTop="20dp"
-        android:background="@android:color/darker_gray" />
+        android:layout_marginTop="20dp"/>
 </LinearLayout>

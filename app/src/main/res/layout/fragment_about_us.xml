@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/helpSupportFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_primary">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/screen_padding">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/about_title"
+            style="@style/TextAppearance.CivicTrack.HeadlineMedium"
+            android:text="About Us"
+            android:textColor="@color/primary_blue"
+            android:layout_marginBottom="10dp" />
+
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Theme.CivicTrack.Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="@dimen/spacing_md">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="9dp"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/TextAppearance.CivicTrack.BodyMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:textAlignment="gravity"
+                    android:text="CivicTrack is a citizen-first platform designed to empower communities by making it easier to report and track civic issues like potholes, garbage dumps, or broken infrastructure. Our mission is to improve urban accountability through transparent communication between citizens and local authorities."
+                    android:layout_marginBottom="@dimen/spacing_xs" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/TextAppearance.CivicTrack.TitleLarge"
+            android:text="Key Features"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/primary_blue"
+            android:layout_marginBottom="8dp" />
+
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Theme.CivicTrack.Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_md">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="9dp"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/TextAppearance.CivicTrack.BodyMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:textAlignment="gravity"
+                    android:text="• Quick reporting with photo and location\n• Real-time issue tracking\n• AI-based prioritization\n• Notifications for status updates"
+                    android:layout_marginBottom="@dimen/spacing_xs" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/TextAppearance.CivicTrack.BodyMedium"
+            android:text="Version: 1.0.0\nDeveloped by the CivicTrack Team"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:layout_marginTop="32dp" />
+    </LinearLayout>
+</ScrollView>

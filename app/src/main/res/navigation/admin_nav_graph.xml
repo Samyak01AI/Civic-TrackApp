@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/admin_nav_graph"
+    app:startDestination="@id/adminFragment">
+
+    <fragment
+        android:id="@+id/adminFragment"
+        android:name="com.example.civic_trackapplication.AdminFragment"
+        android:label="Issues">
+        <action
+            android:id="@+id/action_admin_to_users"
+            app:destination="@id/usersFragment"/>
+        <action
+            android:id="@+id/action_admin_to_stats"
+            app:destination="@id/statsFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/usersFragment"
+        android:name="com.example.civic_trackapplication.AdminUsersFragment"
+        android:label="Users">
+        <action
+            android:id="@+id/action_users_to_admin"
+            app:destination="@id/adminFragment"/>
+        <action
+            android:id="@+id/action_users_to_stats"
+            app:destination="@id/statsFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/statsFragment"
+        android:name="com.example.civic_trackapplication.AdminStatsFragment"
+        android:label="Stats">
+        <action
+            android:id="@+id/action_stats_to_admin"
+            app:destination="@id/adminFragment"/>
+        <action
+            android:id="@+id/action_stats_to_users"
+            app:destination="@id/usersFragment"/>
+    </fragment>
+</navigation>

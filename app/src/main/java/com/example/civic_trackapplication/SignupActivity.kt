@@ -1,13 +1,18 @@
 package com.example.civic_trackapplication
 
+import NetworkMonitor
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.airbnb.lottie.LottieAnimationView
 import com.example.civic_trackapplication.databinding.ActivitySignupBinding
 import com.facebook.AccessToken
 import com.facebook.CallbackManager
@@ -21,12 +26,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 
 
 class SignupActivity : AppCompatActivity() {
@@ -34,12 +41,16 @@ class SignupActivity : AppCompatActivity() {
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var mGoogleSignInClient : GoogleSignInClient
     private lateinit var callbackManager: CallbackManager
+    private lateinit var networkMonitor: NetworkMonitor
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
         firebaseAuth = FirebaseAuth.getInstance()
 
         if (!FacebookSdk.isInitialized()) {
@@ -57,6 +68,9 @@ class SignupActivity : AppCompatActivity() {
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
+        binding.btnFacebook1.setOnClickListener {
+            binding.btnFacebook.performClick()
+        }
         binding.signupButton.setOnClickListener {
             val email = binding.emailInput.text.toString().trim()
             val password = binding.passwordInput.text.toString().trim()
@@ -69,10 +83,6 @@ class SignupActivity : AppCompatActivity() {
                     return@setOnClickListener
                 }
 
-                if (!binding.agreeCheck.isChecked) {
-                    Toast.makeText(this, "You must agree to the terms", Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
-                }
 
                 firebaseAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener { task ->
@@ -82,14 +92,10 @@ class SignupActivity : AppCompatActivity() {
                                 putString("name", name)
                                 putString("email", email)
                                 putString("password", password)
+                                putString("joinDate", Timestamp.now().toString())
                                 apply()
                             }
-                            val name = pref.getString("name", null)
-                            val email = pref.getString("email", null)
-                            val password = pref.getString("password", null)
-                            Log.d("SignupActivity", "name: $name")
-                            Log.d("SignupActivity", "email: $email")
-                            Log.d("SignupActivity", "password: $password")
+                        }
 
                             val user = firebaseAuth.currentUser
                             val profileUpdates = UserProfileChangeRequest.Builder()
@@ -101,14 +107,47 @@ class SignupActivity : AppCompatActivity() {
                                     if (updateTask.isSuccessful) {
                                         user.reload().addOnSuccessListener {
                                             val updatedName = user.displayName
-                                            val intent = Intent(this, LoginActivity::class.java)
                                             Toast.makeText(this, "Signup successful", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+                                }
+                            if (user != null) {
+                                val user1 = FirebaseAuth.getInstance().currentUser
+                                user1?.let {
+                                    val uid = user?.uid ?: "000"
+                                    val name = name ?: "No Name"
+                                    val email = email ?: "No Email"
+                                    val photoUrl = user?.photoUrl?.toString() ?: ""
+
+                                    val userData = hashMapOf(
+                                        "uid" to uid,
+                                        "name" to name,
+                                        "email" to email,
+                                        "photoUrl" to photoUrl,
+                                        "joinDate" to Timestamp.now() // optional
+                                    )
+
+                                    val db = FirebaseFirestore.getInstance()
+                                    db.collection("users").document(uid).set(userData)
+                                        .addOnSuccessListener {
+                                            Log.d("Firestore", "User data saved")
+                                        }
+                                        .addOnFailureListener { e ->
+                                            Log.e("Firestore", "Failed to save user: ${e.message}")
+                                        }
+                                    FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                                        if (task.isSuccessful) {
+                                            val token = task.result
+                                            FirebaseFirestore.getInstance()
+                                                .collection("users")
+                                                .document(uid)
+                                                .update("fcmToken", token)
+                                            val intent = Intent(this, LoginActivity::class.java)
                                             startActivity(intent)
                                             finish()
                                         }
                                     }
                                 }
-
                         } else {
                             Toast.makeText(this, "Signup failed: ${task.exception?.message}",
                                 Toast.LENGTH_SHORT).show()
@@ -119,22 +158,24 @@ class SignupActivity : AppCompatActivity() {
         }
 
         //Facebook Sign-In
-        binding.btnFacebook.setOnClickListener {
-            LoginManager.getInstance().logInWithReadPermissions(this, listOf("email", "public_profile"))
-        }
-
-        LoginManager.getInstance().registerCallback(callbackManager,
+        binding.btnFacebook.setPermissions("email", "public_profile")
+        binding.btnFacebook.registerCallback(
+            callbackManager,
             object : FacebookCallback<LoginResult> {
                 override fun onSuccess(result: LoginResult) {
                     handleFacebookAccessToken(result.accessToken)
                 }
 
                 override fun onCancel() {
-                    Toast.makeText(this@SignupActivity, "Facebook login canceled", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@SignupActivity, "Login cancelled", Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onError(error: FacebookException) {
-                    Toast.makeText(this@SignupActivity, "Error: ${error.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@SignupActivity,
+                        "Login error: ${error.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             })
 
@@ -166,31 +207,6 @@ class SignupActivity : AppCompatActivity() {
         callbackManager.onActivityResult(requestCode, resultCode, data)
     }
 
-    private fun handleFacebookAccessToken(token: AccessToken) {
-        val credential = FacebookAuthProvider.getCredential(token.token)
-        firebaseAuth.signInWithCredential(credential)
-            .addOnCompleteListener(this, { task ->
-                if (task.isSuccessful) {
-                    val user = firebaseAuth.currentUser
-                    user?.let {
-                        val sharedPref = getSharedPreferences("user_pref", Context.MODE_PRIVATE)
-                        with(sharedPref.edit()) {
-                            putString("name", it.displayName)
-                            putString("email", it.email)
-                            putString("uid", it.uid)
-                            putString("user_photo", it.photoUrl?.toString())
-                            putBoolean("isLoggedIn", true)
-                            apply()
-                        }
-                    }
-                    val intent = Intent(this, HomeActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                } else {
-                    Toast.makeText(this, "Facebook sign-in failed.", Toast.LENGTH_SHORT).show()
-                }
-            })
-    }
     private fun firebaseAuthWithGoogle(idToken: String?) {
         mGoogleSignInClient.signOut().addOnCompleteListener { }
         val credential = GoogleAuthProvider.getCredential(idToken, null)
@@ -206,10 +222,43 @@ class SignupActivity : AppCompatActivity() {
                             putString("uid", it.uid)
                             putString("user_photo", it.photoUrl?.toString())
                             putBoolean("isLoggedIn", true)
+                            putString("joinDate", Timestamp.now().toString())
                             apply()
                         }
                     }
-                    val intent = Intent(this, HomeActivity::class.java)
+                    user?.let {
+                        val uid = user.uid
+                        val name = user.displayName ?: "No Name"
+                        val email = user.email ?: "No Email"
+                        val photoUrl = user.photoUrl?.toString() ?: ""
+
+                        val userData = hashMapOf(
+                            "uid" to uid,
+                            "name" to name,
+                            "email" to email,
+                            "photoUrl" to photoUrl,
+                            "joinDate" to Timestamp.now() // optional
+                        )
+
+                        val db = FirebaseFirestore.getInstance()
+                        db.collection("users").document(uid).set(userData)
+                            .addOnSuccessListener {
+                                Log.d("Firestore", "User data saved")
+                            }
+                            .addOnFailureListener { e ->
+                                Log.e("Firestore", "Failed to save user: ${e.message}")
+                            }
+                        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                val token = task.result
+                                FirebaseFirestore.getInstance()
+                                    .collection("users")
+                                    .document(uid)
+                                    .update("fcmToken", token)
+                            }
+                        }
+                    }
+                    val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                     finish()
                 } else {
@@ -217,4 +266,111 @@ class SignupActivity : AppCompatActivity() {
                 }
             })
     }
+    private fun handleFacebookAccessToken(token: AccessToken) {
+        val credential = FacebookAuthProvider.getCredential(token.token)
+        firebaseAuth.signInWithCredential(credential)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    val user = firebaseAuth.currentUser
+                    Toast.makeText(this, "Welcome ${user?.displayName}", Toast.LENGTH_SHORT).show()
+
+                    user?.let {
+                        val uid = user.uid
+                        val name = user.displayName ?: "No Name"
+                        val email = user.email ?: "No Email"
+                        val photoUrl = user.photoUrl?.toString() ?: ""
+
+                        val userData = hashMapOf(
+                            "uid" to uid,
+                            "name" to name,
+                            "email" to email,
+                            "photoUrl" to photoUrl,
+                            "joinDate" to Timestamp.now() // optional
+                        )
+
+                        val db = FirebaseFirestore.getInstance()
+                        db.collection("users").document(uid).set(userData)
+                            .addOnSuccessListener {
+                                Log.d("Firestore", "User data saved")
+                            }
+                            .addOnFailureListener { e ->
+                                Log.e("Firestore", "Failed to save user: ${e.message}")
+                            }
+                        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                val token = task.result
+                                FirebaseFirestore.getInstance()
+                                    .collection("users")
+                                    .document(uid)
+                                    .update("fcmToken", token)
+                            }
+                        }
+                    }
+                    val pref = getSharedPreferences("user_pref", MODE_PRIVATE)
+                    pref.edit().apply {
+                        putString("name", user?.displayName)
+                        putString("email", user?.email)
+                        putString("uid", user?.uid)
+                        putString("user_photo", user?.photoUrl?.toString())
+                        putBoolean("isLoggedIn", true)
+                        putString("joinDate",Timestamp.now().toString())
+                        apply()
+                    }
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                } else {
+                    Toast.makeText(this, "Authentication failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+    }
+    private var connectionDialog: Dialog? = null
+
+    fun showNoConnectionDialog(context: Context) {
+        if (connectionDialog?.isShowing == true) return // Already shown
+
+        connectionDialog = Dialog(context).apply {
+            setContentView(R.layout.popup_connection_status)
+            window?.setBackgroundDrawableResource(android.R.color.transparent)
+            setCancelable(false) // Prevent manual dismissal
+
+            val lottieView = findViewById<LottieAnimationView>(R.id.lottieStatus)
+            lottieView.setAnimation("disconnected.json")
+            lottieView.playAnimation()
+
+            show()
+        }
+    }
+
+    fun dismissConnectionDialog() {
+        connectionDialog?.dismiss()
+        connectionDialog = null
+    }
+    fun isInternetAvailable(context: Context): Boolean {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = cm.activeNetwork ?: return false
+        val capabilities = cm.getNetworkCapabilities(network) ?: return false
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        networkMonitor = NetworkMonitor(this)
+
+        networkMonitor.startMonitoring()
+
+        // Observe connectivity changes
+        networkMonitor.isConnected.observe(this) { isConnected ->
+            if (isConnected) {
+                dismissConnectionDialog()
+            } else {
+                showNoConnectionDialog(this)
+            }
+        }
+
+        if (!isInternetAvailable(this)) {
+            showNoConnectionDialog(this)
+        }
+    }
+
 }
