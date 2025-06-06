@@ -16,7 +16,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         Log.d("FCM", "Received message: $title - $body")
 
         val builder = NotificationCompat.Builder(this, "default_channel")
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.splash)
             .setContentTitle(title)
             .setContentText(body)
             .setPriority(NotificationCompat.PRIORITY_HIGH)

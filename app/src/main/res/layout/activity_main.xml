@@ -18,8 +18,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/bottom_nav_height"
-            android:padding="4dp">
+            android:layout_marginBottom="@dimen/bottom_nav_height">
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/nav_host_fragment"
@@ -34,7 +33,7 @@
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="66dp"
             android:layout_gravity="bottom"
             android:background="@drawable/bottom_nav_background"
             app:elevation="@dimen/elevation_large"

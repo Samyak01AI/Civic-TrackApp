@@ -12,8 +12,7 @@ exports.forwardIssueToPubSub = onDocumentCreated("Issues/{issueId}",
       }
 
       const issue = snap.data();
-      issue.id = event.params.issueId;  // Add this line to include document ID
-
+      issue.id = event.params.issueId;
       try {
         await pubsub.topic("issue-prioritization")
             .publishMessage({json: issue});

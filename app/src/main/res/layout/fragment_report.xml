@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center_horizontal"
-        android:layout_margin="5dp">
+        android:padding="@dimen/spacing_md">
 
         <!-- White Card container -->
         <com.google.android.material.card.MaterialCardView
@@ -93,12 +93,11 @@
                         style="@style/Widget.Material3.Chip.Filter" />
 
                     <com.google.android.material.chip.Chip
-                        android:id="@+id/chipSewage"
+                        android:id="@+id/chipWater"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Sewage"
+                        android:text="Water Leakage"
                         style="@style/Widget.Material3.Chip.Filter" />
-
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipEmergency"
@@ -106,6 +105,8 @@
                         android:layout_height="wrap_content"
                         android:text="Emergency"
                         style="@style/Widget.Material3.Chip.Filter" />
+
+
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipFire"
@@ -115,18 +116,39 @@
                         style="@style/Widget.Material3.Chip.Filter" />
 
                     <com.google.android.material.chip.Chip
-                        android:id="@+id/chipWater"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Water Leakage"
-                        style="@style/Widget.Material3.Chip.Filter" />
-
-                    <com.google.android.material.chip.Chip
                         android:id="@+id/streetLight"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Street Light"
                         style="@style/Widget.Material3.Chip.Filter" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipIllegal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Illegal Construction"
+                        style="@style/Widget.Material3.Chip.Filter" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipElectricity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Electricity"
+                        style="@style/Widget.Material3.Chip.Filter" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipSewage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sewage"
+                        style="@style/Widget.Material3.Chip.Filter" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipTransport"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Public Transport"
+                        style="@style/Widget.Material3.Chip.Filter" />
+
 
                     <!-- Add other chips as needed -->
                 </com.google.android.material.chip.ChipGroup>
